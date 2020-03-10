@@ -19,7 +19,7 @@ LIBRARIES:  Tkinter                                           Tentative list. Mo
             Python Imaging Library (PIL / Pillow)
             PyInstaller
             math module    
-            login module
+            login module (0.0.6)
             
             
 GITHUB:     https://github.com/sailwithsul/building-manager/ 
