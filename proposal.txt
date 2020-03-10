@@ -1,0 +1,45 @@
+HEADING     DESCRIPTION                                       NOTES
+===============================================================================================================================
+CATEGORY:   Business System Simulation                        Not real business; system simulation of corporate office 
+                                                              building(s) - management of floors, stories, rooms, and multiple
+                                                              buildings if constructing/renovating whole site.
+
+
+FEATURES:   Multiple windows and frames.                      1 - story modification; 2 - floor layout and room modification;
+                                                              3 - 2D real-time floor plan visual; 4 - cost/expense chart
+            Data entry, modification, saving (CSV files).     One row = one floor; headings: cost, room type/# of rooms, etc.
+            Price-point and cost calculations.                Per furniture --> per room --> per floor --> per building
+                                                              Hierarchical cascading treeview representation.    
+            Inventory management.                             Inventory: furniture, room size, # of rooms, # of floors etc.
+            Login.                                            Each user has a status to either only view, modify, or delete
+                                                              building information.
+                    
+                    
+LIBRARIES:  Tkinter                                           Tentative list. More may be added as required (or removed).
+            Python Imaging Library (PIL / Pillow)
+            PyInstaller
+            math module    
+            login module
+            
+            
+GITHUB:     https://github.com/sailwithsul/building-manager/ 
+
+
+EXPANSION:  In the future, this project can be upscaled to a  Tentative layout of project.
+            framework that connects both the client 
+            (the corporation/company) and the construction 
+            team with a single-sign-on online interface that 
+            provides real-time updates pushed by the client to 
+            the server, so that any changes can be easily and 
+            quickly conveyed - this will also help keep a 
+            record of all demands, agreed-upon prices and 
+            deals, as well as provide a quick and efficient 
+            way to respond to any construction problems that 
+            may arise and that require client input or 
+            verification before continuing.
+
+
+GROUP:      Team #1                                           Suleiman Mirza, Zhuofan Li, Sagar Surim, Augustus Waldron
+
+
+
