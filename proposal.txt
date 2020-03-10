@@ -39,7 +39,7 @@ EXPANSION:  In the future, this project can be upscaled to a  Tentative layout o
             verification before continuing.
 
 
-GROUP:      Team #1                                           Suleiman Mirza, Zhuofan Li, Sagar Surim, Augustus Waldron
+GROUP:      Team #1                                           Suleiman Mirza, Zhuofan Li, Sagar Suri, Augustus Waldron
 
 
 
