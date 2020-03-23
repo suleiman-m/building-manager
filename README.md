@@ -1,5 +1,5 @@
 # building-manager
-A user-friendly GUI to help bridge the gap between corporations and construction companies for the creation or modification of office and commercial buildings and/or floor spaces. ## View proposal.txt for more details.
+A user-friendly GUI to help bridge the gap between corporations and construction companies for the creation or modification of office and commercial buildings and/or floor spaces. View proposal.txt for more details.
 
 # Introduction
 This program is a GUI of three windows - one window has options to add, delete, or re-organize floors throughout a building - this can include the entire building itself, or just a range of specific floors (i.e. a rented-out office space). 
