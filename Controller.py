@@ -10,6 +10,8 @@ from tkinter import filedialog
 '''Creates the model, view, and controller for the application and runs it.
 
 ====NOTES====
+CCT211 Group Project
+
 All files are located in one folder. The naming convention accounts for each 
 corresponding building number. 
 
