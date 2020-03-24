@@ -24,6 +24,7 @@ class Story:
         # {'Bathroom': 3, 'Conference Room': 5, ...}
         self.rooms = {}
         self.num_rooms = len(self.rooms)
+        self.total_cost = 0
     
     def add_room(self, room, amt):
         if (room in self.rooms):
@@ -46,6 +47,7 @@ class Room:
         self.room_type = room_type
         self.room_size = size
         self.room_location = location
+        self.total_cost = 0
         # {'Office Chair': 25, 'Conference Table': 1, ...}
         self.furniture = {}
 
@@ -57,7 +59,7 @@ class Room:
         
         return
     
-    def remove_furniture(self, furniture):
+    def remove_furniture(self, furniture, amt):
         if (furniture in self.furniture):
             self.furniture[furniture] = self.furniture[furniture] - amt
         else:
