@@ -200,20 +200,21 @@ class ManageFloorScreen(tk.Frame):
         
         self.title= Label(self, text="Floor Manager", width="54",
                          foreground="white", background="#39A78E", \
-                         font=(controller.font, 20), anchor="center")        
+                         font=(controller.font, 20), anchor=CENTER)        
         
-        self.title.place(relx=0.5, rely=0.0250, anchor=CENTER, height=30)
+        self.title.grid(row=0, column=0, columnspan=3, sticky="we")
+        # self.title.place(relx=0.5, rely=0.0250, anchor=CENTER, height=30)
         
-        self.HP_btn = Button(self, text="Home Page",
+        self.HP_btn = Button(self, text="Home Page", 
            style="TButton", command=lambda: controller.choose_frame("HP"))        
-        self.MB_btn = Button(self, text="Manage Building", width="22",
+        self.MB_btn = Button(self, text="Manage Building", 
            style="TButton", command=lambda: controller.choose_frame("MB"))
-        self.VCB_btn = Button(self, text="View Current Blueprint", width="22",
+        self.VCB_btn = Button(self, text="View Current Blueprint", 
            style="TButton", command=lambda: controller.choose_frame("VCB"))  
         
-        self.HP_btn.place(x=0, y=27)
-        self.MB_btn.place(x=230, y=27)
-        self.VCB_btn.place(x=470, y=27)          
+        self.HP_btn.grid(row=1, column=0, sticky="we")
+        self.MB_btn.grid(row=1, column=1, sticky="we")
+        self.VCB_btn.grid(row=1, column=2, sticky="we")        
     
         return    
 

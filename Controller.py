@@ -19,6 +19,7 @@ Creating a new file or opening an existing file should require an
 "Are you sure you wish to proceed?" check, because doing so will overwrite all 
 the currently stored data in Model.
 '''
+
 class Controller:
     
     def __init__(self):
