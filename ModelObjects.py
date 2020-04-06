@@ -4,16 +4,16 @@ class Building:
         self.stories = []
         self.address = ""
         self.total_floors = len(self.stories)
+        self.total_cost = 0
         self.modifiable_floors = 0
         self.current_floors_modified = 0
         # This will always be 0 while cur_flo_mod != mod_flo.
         self.construction_progress = 0
-        self.total_cost = 0
 
     def mod_story(self, story, mode):
         if (mode == "add"):
             self.stories.append(story)
-        else:
+        elif (mode == "del"):
             self.stories.remove(story)
         
         return 
@@ -38,12 +38,16 @@ class Story:
         if (room in self.rooms):
             self.rooms[room] = self.rooms[room] - amt
         else:
-            print("That room does not exist.")
+            print("That room does not exist yet.")
             
         return
 
 class Room:
     def __init__(self, room_type, size, location):
+        ''' 
+        Example Initation:
+        room204 = Room("conference room", 50, "north-west")
+        '''
         self.room_type = room_type
         self.room_size = size
         self.room_location = location
@@ -69,6 +73,16 @@ class Room:
 
 class Model:
     def __init__(self, controller, mode):
+        ''' DO NOT MODIFY .CSV FILES WHEN OPENING NEW/EXISTING DOCUMENTS, IN CASE
+        USER WANTS TO CANCEL CHANGES. 
+        
+        Instantiation format for Building, Story and Room classes:
+             self.b#
+             self.b#s#
+             self.b#s#r#
+        View can now call self.controller.model.(b# or b#s# or b#s#r#) to access
+        values and functions (e.g. Building.mod_story)
+        '''
         self.controller = controller
         
         if (mode == "new file"):

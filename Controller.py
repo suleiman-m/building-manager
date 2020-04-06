@@ -12,8 +12,11 @@ from tkinter import filedialog
 ====NOTES====
 CCT211 Group Project
 
-All files are located in one folder. The naming convention accounts for each 
-corresponding building number. 
+ALL FILES are located in one folder. The naming convention accounts for each 
+corresponding building number:
+    building3.csv
+    building3_floors.csv
+    building3_rooms.csv
 
 Creating a new file or opening an existing file should require an 
 "Are you sure you wish to proceed?" check, because doing so will overwrite all 
@@ -28,7 +31,7 @@ class Controller:
         self.values_loaded = False
         # File not yet saved on first launch.
         self.savestatus = 0
-        # Temporary initial placeholder for attribute. Updated in csave_file().
+        # Placeholder. Updated in csave_file().
         self.savetime = datetime.now().strftime("%H:%M:%S")
         
         self.root.title("building-manager v1.0")

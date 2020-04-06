@@ -50,6 +50,10 @@ class View():
         self.main_frame.grid_rowconfigure(0, weight=1)
         self.main_frame.grid_columnconfigure(0, weight=1)
         
+        self.projectInfo = tk.Label(self.root, text="Building ID Number:  1 (Office Space Lease)", \
+                                    font=(self.font, 12), anchor=W)
+        self.projectInfo.pack(side="bottom", anchor="w")
+        
         # Initializing the four main frames here.
         self.frames = {}
         frame0 = HomePage(parent=self.main_frame, controller=self)
@@ -149,7 +153,7 @@ class HomePage(tk.Frame):
         tk.Frame.__init__(self, parent, width="640", height="480")
         self.controller = controller
 
-        self.title= Label(self, text="Building Planner", width="54", \
+        self.title= Label(self, text="Building Planner", width="55", \
                          foreground="white", background="#39A78E", \
                          font=(controller.font, 20), anchor=CENTER)
        
@@ -164,8 +168,54 @@ class HomePage(tk.Frame):
 
         self.MB_btn.grid(row=1, column=0, sticky="we")
         self.MF_btn.grid(row=1, column=1, sticky="we")
-        self.VCB_btn.grid(row=1, column=2, sticky="we")        
-    
+        self.VCB_btn.grid(row=1, column=2, sticky="we")
+        
+        # Blank Row 1 
+        # (filler space)
+        self.br1 = Label(self, text=" ", background="white", \
+                         font=(controller.font, 100))
+        self.br1.grid(row=2, column=1)
+        
+        self.welcome = Label(self, text="Welcome to Building Manager v1.0!", 
+                             background="light gray", foreground="black",\
+                             font=(controller.font, 12), anchor=CENTER)
+        
+        self.welcome2 = Label(self, text="Here, you can register a building or office", \
+                              background="light gray", foreground="black",\
+                              font=(controller.font, 12), anchor=W)
+        
+        self.welcome3 = Label(self, text="lease to modify and manage workspaces, ", \
+                             background="light gray", foreground="black",\
+                             font=(controller.font, 12), anchor=W)  
+        
+        self.welcome4 = Label(self, text="floor-plans, blueprints, HVAC, furnishing, ", \
+                              background="light gray", foreground="black",\
+                              font=(controller.font, 12), anchor=W)
+        
+        self.welcome5 = Label(self, text="and story/room costs.", \
+                              background="light gray", foreground="black",\
+                              font=(controller.font, 12), anchor=W)                              
+
+        self.welcome.grid(row=4, column=1, sticky="we")   
+        self.welcome2.grid(row=5, column=1, sticky="we")
+        self.welcome3.grid(row=6, column=1, sticky="we")
+        self.welcome4.grid(row=7, column=1, sticky="we")
+        self.welcome5.grid(row=8, column=1, sticky="we")
+        
+        # Blank Row 2
+        self.br2 = Label(self, text=" ", background="white", \
+                         font=(controller.font, 100))
+        self.br2.grid(row=9, column=0)    
+        
+        self.getStarted = Label(self, text="Get Started: ", background="white", \
+                                foreground="blue", font=(controller.font, 20))
+        self.getStarted.grid(row=10, column=0, sticky="we")
+        
+        self.gsMessage = Label(self, text="Create a new file or load a pre-existing one using the File menu in the top left of your screen.", \
+                               foreground="black", font=(controller.font, 12), \
+                               background="white")
+        self.gsMessage.grid(row=11, column=0, columnspan=3, sticky="we")
+        
         return     
 
 class ManageBuildingScreen(tk.Frame):
@@ -174,7 +224,7 @@ class ManageBuildingScreen(tk.Frame):
         self.controller = controller 
         
         self.title= Label(self, text="Building Manager", \
-                         foreground="white", background="#39A78E", width="54",\
+                         foreground="white", background="#39A78E", width="55",\
                          font=(controller.font, 20), anchor=CENTER)        
         
         self.title.grid(row=0, column=0, columnspan=3, sticky="we")
@@ -189,7 +239,53 @@ class ManageBuildingScreen(tk.Frame):
         
         self.HP_btn.grid(row=1, column=0, sticky="we")
         self.MF_btn.grid(row=1, column=1, sticky="we")
-        self.VCB_btn.grid(row=1, column=2, sticky="we")                
+        self.VCB_btn.grid(row=1, column=2, sticky="we") 
+        
+        self.address = Label(self, text="Address: ", background="white", \
+                         font=(controller.font, 15), anchor=E, foreground="blue")
+        self.address.grid(row=2, column=0, sticky="we")  
+        self.addressField = Entry(self, foreground="black")
+        self.addressField.insert(0, "1055-A Forestwood Drive")
+        self.addressField.config(state=DISABLED)
+        self.addressField.grid(row=2, column=1, sticky="we")
+        
+        self.region = Label(self, text="Region: ", background="white", \
+                         font=(controller.font, 15), anchor=E, foreground="blue")
+        self.region.grid(row=3, column=0, sticky="we")  
+        self.regionField = Entry(self, foreground="black")
+        self.regionField.insert(0, "Missisauga, ON, Canada")
+        self.regionField.config(state=DISABLED)
+        self.regionField.grid(row=3, column=1, sticky="we")
+        
+        self.postalCode = Label(self, text="Postal Code: ", background="white", \
+                         font=(controller.font, 15), anchor=E, foreground="blue")
+        self.postalCode.grid(row=4, column=0, sticky="we")  
+        self.postalCode = Entry(self, foreground="black")
+        self.postalCode.insert(0, "L5C 1T6")
+        self.postalCode.config(state=DISABLED)
+        self.postalCode.grid(row=4, column=1, sticky="we")  
+        
+        self.totalStories = Label(self, text="Building Details: ", background="white", \
+                         font=(controller.font, 15), anchor=E, foreground="blue")
+        self.totalStories.grid(row=5, column=0, sticky="we")  
+        self.totalStories = Entry(self, foreground="black")
+        self.totalStories.insert(0, "Stories: 8 | Modifiable Floors: 7")
+        self.totalStories.config(state=DISABLED)
+        self.totalStories.grid(row=5, column=1, sticky="we")
+        
+        self.totalCost = Label(self, text="Total Construction Cost: ", background="white", \
+                         font=(controller.font, 15), anchor=E, foreground="red")
+        self.totalCost.grid(row=6, column=0, sticky="we")  
+        self.totalCost = Entry(self, foreground="red")
+        self.totalCost.insert(0, "$15, 647.97 CAD")
+        self.totalCost.config(state=DISABLED)
+        self.totalCost.grid(row=6, column=1, sticky="we")         
+        
+        self.addFloor = Button(self, text="Add Floor", command=lambda: self.controller.model.b1.mod_story("add"))
+        self.addFloor.grid(row=7, column=2, sticky="we")
+        
+        self.removeFloor = Button(self, text="Remove Floor", command=lambda: self.controller.model.b1.mod_story("del"))
+        self.removeFloor.grid(row=8, column=2, sticky="we")
     
         return    
 
@@ -198,23 +294,29 @@ class ManageFloorScreen(tk.Frame):
         tk.Frame.__init__(self, parent, width="640", height="480")
         self.controller = controller
         
-        self.title= Label(self, text="Floor Manager", width="54",
+        self.title= Label(self, text="Floor Manager", width="56",
                          foreground="white", background="#39A78E", \
                          font=(controller.font, 20), anchor=CENTER)        
         
-        self.title.grid(row=0, column=0, columnspan=3, sticky="we")
-        # self.title.place(relx=0.5, rely=0.0250, anchor=CENTER, height=30)
+        #self.title.grid(row=0, column=0, columnspan=3, sticky="we")
+        self.title.place(relx=0.5, rely=0.0250, anchor=CENTER, height=30)
         
         self.HP_btn = Button(self, text="Home Page", 
            style="TButton", command=lambda: controller.choose_frame("HP"))        
         self.MB_btn = Button(self, text="Manage Building", 
-           style="TButton", command=lambda: controller.choose_frame("MB"))
+           style="TButton", command=lambda: controller.choose_frame("MB"), \
+           width="21")
         self.VCB_btn = Button(self, text="View Current Blueprint", 
-           style="TButton", command=lambda: controller.choose_frame("VCB"))  
+           style="TButton", command=lambda: controller.choose_frame("VCB"), \
+           width="23")  
         
-        self.HP_btn.grid(row=1, column=0, sticky="we")
-        self.MB_btn.grid(row=1, column=1, sticky="we")
-        self.VCB_btn.grid(row=1, column=2, sticky="we")        
+        #self.HP_btn.grid(row=1, column=0, sticky="we")
+        #self.MB_btn.grid(row=1, column=1, sticky="we")
+        #self.VCB_btn.grid(row=1, column=2, sticky="we") 
+        
+        self.HP_btn.place(x=0, y=27)
+        self.MB_btn.place(x=230, y=27)
+        self.VCB_btn.place(x=470, y=27)         
     
         return    
 
@@ -223,7 +325,7 @@ class ViewBlueprintScreen(tk.Frame):
         tk.Frame.__init__(self, parent, width="640", height="480")
         self.controller = controller
         
-        self.title= Label(self, text="Floor-Plan Blueprint Viewer", width="54",\
+        self.title= Label(self, text="Floor-Plan Blueprint Viewer", width="55",\
                          foreground="white", background="#39A78E", \
                          font=(controller.font, 20), anchor="center")        
         
