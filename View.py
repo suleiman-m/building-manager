@@ -6,6 +6,7 @@ from tkinter import messagebox
 
 from ModelObjects import *
 from Controller import *
+from PIL import ImageTk, Image
 
 ''' The visual interface for the application.'''
 class View():
@@ -23,7 +24,7 @@ class View():
         self.menubar.add_cascade(label="File", underline=0, menu=fileMenu)
         self.menubar.add_cascade(label="Help", underline=0, menu=helpMenu)
         
-        fileMenu.add_command(label="New File", underline=1, command=lambda: self.new_file("menu button"))
+        fileMenu.add_command(label="New File", underline=1, command=lambda: self.new_file())
         fileMenu.add_command(label="Open File", underline=2, command=lambda: self.open_file("menu button", 0))
         fileMenu.add_command(label="Save", underline=3, command=lambda: self.save_file("save"))
         fileMenu.add_command(label="Save As", underline=4, command=lambda: self.save_file("saveas"))
@@ -50,9 +51,9 @@ class View():
         self.main_frame.grid_rowconfigure(0, weight=1)
         self.main_frame.grid_columnconfigure(0, weight=1)
         
-        self.projectInfo = tk.Label(self.root, text="Building No. ID:  0 (No File Loaded)", \
+        self.projectInfo = tk.Label(self.root, text="Building No. ID:  0 (No File Loaded)", background=self.background, \
                                     font=(self.font, 12), anchor=W)
-        self.projectInfo.pack(side="bottom", anchor="w")
+        self.projectInfo.pack(side="bottom", anchor="w", pady=(0,20))
         
         # Initializing the four main frames here.
         self.frames = {}
@@ -169,6 +170,8 @@ class View():
 class HomePage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, width="640", height="480")
+        self.background="#F1FBF7"
+        self.config(background=self.background)
         self.controller = controller
 
         self.title= Label(self, text="Building Planner", width="55", \
@@ -188,51 +191,29 @@ class HomePage(tk.Frame):
         self.MF_btn.grid(row=1, column=1, sticky="we")
         self.VCB_btn.grid(row=1, column=2, sticky="we")
         
-        # Blank Row 1 
-        # (filler space)
-        self.br1 = Label(self, text=" ", background="white", \
-                         font=(controller.font, 100))
-        self.br1.grid(row=2, column=1)
-        
-        self.welcome = Label(self, text="Welcome to Building Manager v1.0!", 
-                             background="light gray", foreground="black",\
-                             font=(controller.font, 12), anchor=CENTER)
-        
-        self.welcome2 = Label(self, text="Here, you can register a building or office", \
-                              background="light gray", foreground="black",\
-                              font=(controller.font, 12), anchor=W)
-        
-        self.welcome3 = Label(self, text="lease to modify and manage workspaces, ", \
-                             background="light gray", foreground="black",\
-                             font=(controller.font, 12), anchor=W)  
-        
-        self.welcome4 = Label(self, text="floor-plans, blueprints, HVAC, furnishing, ", \
-                              background="light gray", foreground="black",\
-                              font=(controller.font, 12), anchor=W)
-        
-        self.welcome5 = Label(self, text="and story/room costs.", \
-                              background="light gray", foreground="black",\
-                              font=(controller.font, 12), anchor=W)                              
+        # Set up logo
+        image = Image.open("building-icon.png")
+        image = image.resize((200, 150), Image.ANTIALIAS)
+        self.photo = ImageTk.PhotoImage(image)
+        self.logo = Label(self, text="Logo", image=self.photo, background=self.background)
+        self.logo.grid(row=2, column=0, sticky="NSEW", pady=(75,75), padx=(10,0))
+     
+        self.welcome = Label(self, text="\nWelcome to Building Manager v1.0!" +
+        "\nHere, you can register a building or office lease to modify and manage workspaces, " +
+        " floor-plans, blueprints, HVAC, furnishing and story/room costs.\n", 
+            background=self.background #"#39A78E"
+            , font=(controller.font, 14), 
+            anchor=CENTER, wraplength=350, borderwidth=1, relief="solid", padding=0)
+        self.welcome.grid(row=2, column=1, sticky="we", columnspan=2, padx=(0,10))  
 
-        self.welcome.grid(row=4, column=1, sticky="we")   
-        self.welcome2.grid(row=5, column=1, sticky="we")
-        self.welcome3.grid(row=6, column=1, sticky="we")
-        self.welcome4.grid(row=7, column=1, sticky="we")
-        self.welcome5.grid(row=8, column=1, sticky="we")
-        
-        # Blank Row 2
-        self.br2 = Label(self, text=" ", background="white", \
-                         font=(controller.font, 100))
-        self.br2.grid(row=9, column=0)    
-        
-        self.getStarted = Label(self, text="Get Started: ", background="white", \
-                                foreground="blue", font=(controller.font, 20))
-        self.getStarted.grid(row=10, column=0, sticky="we")
+
+        self.getStarted = Label(self, text="Get Started: ", background=self.background, \
+                                foreground="#39A78E", font=(controller.font, 20))
+        self.getStarted.grid(row=10, column=0, sticky="we",padx=(10,0))
         
         self.gsMessage = Label(self, text="Create a new file or load a pre-existing one using the File menu in the top left of your screen.", \
-                               foreground="black", font=(controller.font, 12), \
-                               background="white")
-        self.gsMessage.grid(row=11, column=0, columnspan=3, sticky="we")
+            foreground="black", font=(controller.font, 12), background=self.background)
+        self.gsMessage.grid(row=11, column=0, columnspan=3, sticky="we", padx=(10,0)  )
         
         return     
 

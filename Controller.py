@@ -35,7 +35,7 @@ class Controller:
         self.savestatus = 0
         # Placeholder. Updated in csave_file().
         self.savetime = datetime.now().strftime("%H:%M:%S")
-        
+        self.chosen_building=""
         self.root.title("building-manager v1.0")
         self.root.configure(width="640", height="480")
         self.view = View(self.root, self)
@@ -48,7 +48,7 @@ class Controller:
         elif (mode == "open file"):
             self.chosen_building = self.view.chosen_building  
             
-        self.model = ModelObjects.Model(self, mode)
+        self.model = Model(self, mode)
         
         # Must change self.chosen_building to avoid attribute error later 
         # for new-file option.
