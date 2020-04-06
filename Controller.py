@@ -1,4 +1,6 @@
 from datetime import datetime
+import sys
+import string
 
 from View import *
 from ModelObjects import *
@@ -12,11 +14,11 @@ from tkinter import filedialog
 ====NOTES====
 CCT211 Group Project
 
-ALL FILES are located in one folder. The naming convention accounts for each 
-corresponding building number:
-    building3.csv
-    building3_floors.csv
-    building3_rooms.csv
+ALL DATA FILES are located in one folder. The naming convention accounts for 
+each corresponding building number:
+    b3_floors.csv
+    b3_rooms.csv
+ALL REGISTERED BUILDINGS are located in buildings.csv with their IDs.
 
 Creating a new file or opening an existing file should require an 
 "Are you sure you wish to proceed?" check, because doing so will overwrite all 
@@ -47,6 +49,11 @@ class Controller:
             self.chosen_building = self.view.chosen_building  
             
         self.model = ModelObjects.Model(self, mode)
+        
+        # Must change self.chosen_building to avoid attribute error later 
+        # for new-file option.
+        self.view.projectInfo.config(text="Building No. ID: " + self.chosen_building \
+                                     + "(Office Space Lease)", foreground="black")
         self.values_loaded = True
         
         return

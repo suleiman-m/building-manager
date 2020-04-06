@@ -1,14 +1,20 @@
+from View import *
+from Controller import *
+
+import csv
+import string
+
 class Building:
 
     def __init__(self):
         self.stories = []
         self.address = ""
+        self.region = ""
+        self.postalCode = ""
         self.total_floors = len(self.stories)
-        self.total_cost = 0
+        self.total_cost = ""
         self.modifiable_floors = 0
         self.current_floors_modified = 0
-        # This will always be 0 while cur_flo_mod != mod_flo.
-        self.construction_progress = 0
 
     def mod_story(self, story, mode):
         if (mode == "add"):
@@ -73,13 +79,13 @@ class Room:
 
 class Model:
     def __init__(self, controller, mode):
-        ''' DO NOT MODIFY .CSV FILES WHEN OPENING NEW/EXISTING DOCUMENTS, IN CASE
-        USER WANTS TO CANCEL CHANGES. 
+        ''' DO NOT MODIFY BUILDING.CSV with new building ID# at time of opening,
+        in case user does NOT want to save changes.
         
         Instantiation format for Building, Story and Room classes:
-             self.b#
-             self.b#s#
-             self.b#s#r#
+             self.b# = Building(...)
+             self.b#s# = Story(...)
+             self.b#s#r# = Room(...)
         View can now call self.controller.model.(b# or b#s# or b#s#r#) to access
         values and functions (e.g. Building.mod_story)
         '''
@@ -98,6 +104,26 @@ class Model:
             #        Find and open floors.csv and rooms.csv (using Building Num)
             #        to set the Story and Room attributes.
             # See Controller.py -> csavefile() for filename formats.
-            pass
+            
+            # Assumes user entered valid number.
+            with open("/buildings/buildings.csv") as topfile:
+                readCSV = csv.reader(topfile, delimiter=',')
+                for row in readCSV:
+                    if (row[0] == controller.chosen_building):
+                        self.b1 = Building()
+                        self.b1.address = row[1]
+                        self.b1.region = row[2]
+                        self.b1.postalCode = row[3]
+                        self.b1.total_cost = row[7]
+                        
+                        # Open up correct b#_floors.csv file.
+                        # Initiate each row as a self.b#s# story, then set:
+                        #     self.b1.stories = [floor1, floor2, floor3...]
+                        
+                        # Open up correct b3_rooms.csv file.
+                        # Initiate each row as a self.b#s#r# room, then set:
+                        #     self.b1s1.rooms = {'bathroom': amt, 'office': amt...}
+                        
+                        return
         
         return

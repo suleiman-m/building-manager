@@ -23,8 +23,8 @@ class View():
         self.menubar.add_cascade(label="File", underline=0, menu=fileMenu)
         self.menubar.add_cascade(label="Help", underline=0, menu=helpMenu)
         
-        fileMenu.add_command(label="New File", underline=1, command=lambda: self.new_file)
-        fileMenu.add_command(label="Open File", underline=2, command=lambda: self.open_file)
+        fileMenu.add_command(label="New File", underline=1, command=lambda: self.new_file("menu button"))
+        fileMenu.add_command(label="Open File", underline=2, command=lambda: self.open_file("menu button", 0))
         fileMenu.add_command(label="Save", underline=3, command=lambda: self.save_file("save"))
         fileMenu.add_command(label="Save As", underline=4, command=lambda: self.save_file("saveas"))
         fileMenu.add_command(label="Exit", underline=5, command=self.exit_program)
@@ -50,7 +50,7 @@ class View():
         self.main_frame.grid_rowconfigure(0, weight=1)
         self.main_frame.grid_columnconfigure(0, weight=1)
         
-        self.projectInfo = tk.Label(self.root, text="Building ID Number:  1 (Office Space Lease)", \
+        self.projectInfo = tk.Label(self.root, text="Building No. ID:  0 (No File Loaded)", \
                                     font=(self.font, 12), anchor=W)
         self.projectInfo.pack(side="bottom", anchor="w")
         
@@ -59,15 +59,25 @@ class View():
         frame0 = HomePage(parent=self.main_frame, controller=self)
         frame0.grid(row=0, column=0, sticky="nsew")
         self.frames["Home Page"] = frame0
+        
         frame1 = ManageBuildingScreen(parent=self.main_frame, controller=self)
         frame1.grid(row=0, column=0, sticky="nsew")
         self.frames["Building Manager"] = frame1
+        
         frame2 = ManageFloorScreen(parent=self.main_frame, controller=self)
         frame2.grid(row=0, column=0, sticky="nsew")
         self.frames["Floor Manager"] = frame2
+        
         frame3 = ViewBlueprintScreen(parent=self.main_frame, controller=self)
         frame3.grid(row=0, column=0, sticky="nsew")
         self.frames["Floor-Plan Blueprint Viewer"] = frame3
+        
+        frame4 = OpenFileScreen(parent=self.main_frame, controller=self)
+        frame4.grid(row=0, column=0, sticky="nsew")
+        self.frames["Open File"] = frame4
+        
+        # Initializing helper frames here.
+        #pass
         
         self.goScreen("Home Page")
         
@@ -130,13 +140,21 @@ class View():
         
         return
     
-    def open_file(self):
-        self.chosen_building = 0
+    def open_file(self, caller, num):
+        self.chosen_building = num
+        if (caller == "menu button"):
+            self.go_Screen("Open File")
+            return
+        
+        elif (caller == "submit button"):
+            self.controller.set_up("open file")
+            self.choose_frame("HP")            
+        
+        # CHANGES REQUIRED:
         # Open pop-up window with selectable drop-down menu asking for Building
         # Number. Each option should have number and address present on the 
-        # same line. Update self.chosen_building
-        self.controller.set_up("open file")
-        
+        # same line. Update self.chosen_building after selection.
+
         return
     
     def exit_program(self):
@@ -241,6 +259,11 @@ class ManageBuildingScreen(tk.Frame):
         self.MF_btn.grid(row=1, column=1, sticky="we")
         self.VCB_btn.grid(row=1, column=2, sticky="we") 
         
+        #Blank Row 1
+        self.br1 = Label(self, text=" ", background="white", \
+                         font=(controller.font, 100))
+        self.br1.grid(row=9, column=0)          
+        
         self.address = Label(self, text="Address: ", background="white", \
                          font=(controller.font, 15), anchor=E, foreground="blue")
         self.address.grid(row=2, column=0, sticky="we")  
@@ -342,4 +365,49 @@ class ViewBlueprintScreen(tk.Frame):
         self.MB_btn.grid(row=1, column=1, sticky="we")
         self.MF_btn.grid(row=1, column=2, sticky="we")         
     
+        return 
+
+class OpenFileScreen(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent, width="640", height="480")
+        self.controller = controller
+        
+        self.title= Label(self, text="Open File", width="55",\
+                         foreground="white", background="#39A78E", \
+                         font=(controller.font, 20), anchor="center")        
+        self.title.grid(row=0, column=0, columnspan=3)
+        
+        self.HP_btn = Button(self, text="Back to Home Page", 
+           style="TButton", command=lambda: controller.choose_frame("HP"))        
+        self.HP_btn.grid(row=1, column=0, columnspan=3, sticky="we")
+        
+        #Blank Row 1
+        self.br1 = Label(self, text=" ", background="white", \
+                         font=(controller.font, 100))
+        self.br1.grid(row=2, column=0)         
+        
+        valBuildNum = (self.register(self.is_Num), "%S")
+        self.enterNum = Label(self, text="Enter Building ID No. Here: ", anchor=W, \
+                              validate="key", validatecommand=valBuildNum)
+        self.enterNum.grid(row=3, column=0, sticky="we")
+        
+        self.numForm = Entry(self, anchor=W, )
+        self.numForm.grid(row=3, column=1, sticky="we")
+        
+        self.accept_btn = Button(self, text="Accept", style="TButton", \
+                                 command=self.submit, anchor=CENTER)
+        self.accept_btn.grid(row=4, column=1, sticky="we")
+    
+        return
+    
+    def is_Num(self, d, V):
+        if (d.isdigit()):
+            return True
+        
+        return False 
+    
+    def submit(self):
+        if (len(self.numForm.get()) > 0):
+            controller.open_file("submit button", self.numForm.get())
+        
         return
