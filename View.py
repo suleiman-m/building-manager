@@ -387,15 +387,13 @@ class OpenFileScreen(tk.Frame):
         self.br1.grid(row=2, column=0)         
         
         valBuildNum = (self.register(self.is_Num), "%S")
-        self.enterNum = Label(self, text="Enter Building ID No. Here: ", anchor=W, \
-                              validate="key", validatecommand=valBuildNum)
+        self.enterNum = Label(self, text="Enter Building ID No. Here: ", anchor=W)
         self.enterNum.grid(row=3, column=0, sticky="we")
         
-        self.numForm = Entry(self, anchor=W, )
+        self.numForm = Entry(self, validate="key", validatecommand=valBuildNum)
         self.numForm.grid(row=3, column=1, sticky="we")
         
-        self.accept_btn = Button(self, text="Accept", style="TButton", \
-                                 command=self.submit, anchor=CENTER)
+        self.accept_btn = Button(self, text="Accept", style="TButton", command=self.submit)
         self.accept_btn.grid(row=4, column=1, sticky="we")
     
         return
