@@ -417,78 +417,105 @@ class ViewBlueprintScreen(tk.Frame):
         self.MB_btn.grid(row=1, column=1, sticky="we")
         self.MF_btn.grid(row=1, column=2, sticky="we")         
         
-        def make_draggable(widget):
-            widget.bind("<Button-1>", on_drag_start)
-            widget.bind("<B1-Motion>", on_drag_motion)
-
-        def on_drag_start(event):
-            widget = event.widget
-            widget._drag_start_x = event.x
-            widget._drag_start_y = event.y
-
-        def on_drag_motion(event):
-            widget = event.widget
-            x = widget.winfo_x() - widget._drag_start_x + event.x
-            y = widget.winfo_y() - widget._drag_start_y + event.y
-            widget.place(x=x, y=y)
-       
+        dragger = Dragger()
         
-        
-        canvas = tk.Canvas(self, width=800, height=500, background="#a7d8b8")
-        
-        canvas.grid(row=2, column=0, columnspan=3) 
-
+        canvas = tk.Canvas(self, width=800, height=500, background="white")
+        canvas.grid(row=2, column=0, columnspan=3,sticky="nsw" ) 
 
         scroll_y = tk.Scrollbar(self, orient="vertical", command=canvas.yview)
-        scroll_y.grid(row=2, column=2, sticky="nse")
+        scroll_y.grid(row=2, column=0, sticky="nse")
         canvas.configure(scrollregion=canvas.bbox("all"))
         canvas.configure(yscrollcommand=scroll_y.set)
         
-             
-
-
         directory = 'images'
-        self.floor_plan_objects = []
+        self.objects = {}
         self.filenames =[]
         self.photos = []
-        self.gridded =[]
+        self.images=[]
 
-        def onObjectClick(event): 
+        def onObjectClick(event, filename): 
+            
             index = 0                 
             for name in self.filenames:
                 if filename == name: 
-                    self.gridded_object = self.floor_plan_objects[index].grid(row=3,column=2)
-                    self.gridded.append(self.gridded_object)
+    
+                    self.object = Label(self, text=filename, image=self.photos[index], background=background)
+                    dragger.make_draggable(self.object)                 
+                    self.objects[filename] = self.object
+
+                    self.objects[filename].grid(row=2,column=2)    
+                    print(filename)
+                    
                 index +=1
-                print(name)
-
-        row = 3
-        column=0
-        x = 100
-        y = 0
-        for filename in os.listdir(directory):
-            self.filenames.append(filename)
-        
-            image = Image.open("images/" + filename)
-            self.photo = ImageTk.PhotoImage(image)
-            self.photos.append(self.photo)
-            self.object = Label(self, text=filename, image=self.photo, background=background)
-            make_draggable(self.object)
-            self.floor_plan_objects.append(self.object)           
+        self.rotation = 0
+        def createItems():
+            canvas.delete("all")
+            self.objects = {}
+            self.filenames =[]
+            self.photos = []
             
-            canvas.create_image(x,y,image=self.photo, tags=filename)
+            x = 100
+            y = 10
+            canvas.create_rectangle(-20,0, 250, 2500, fill="#a7d8b8")
+            for filename in os.listdir(directory):
+                self.filenames.append(filename)
+                self.image = Image.open("images/" + filename)
+                self.images.append(self.image)
+        
+
+                self.photo = ImageTk.PhotoImage(self.image)
+                self.photos.append(self.photo)
+                canvas.create_image(x,y,image=self.photo, tags=filename, anchor="n")
+                canvas.tag_bind(filename, '<ButtonPress-1>', lambda event, arg=filename: onObjectClick(event, arg))
+                y+=(self.photo.height() +30)
             canvas.configure(scrollregion=canvas.bbox("all"))
-            canvas.tag_bind(filename, '<ButtonPress-1>', lambda event, arg=filename: onObjectClick(event))
-            y+=self.photo.height()
-            y+=100
-            row+=1
-        
-        
- 
+        createItems()
+        self.rotation = 0
+        def rotate():
+            index = 0
+            for image in self.images:
+                image = image.transpose(Image.ROTATE_90)
+                image.save("images/" + self.filenames[index])
 
+            canvas.update_idletasks
+        rotateBTN = Button(self, text="Rotate", command=rotate)
+        rotateBTN.grid(row=3, column=2)
 
+# image = image.transpose(Image.ROTATE_90)
         return 
+class Dragger:
+    def __init__(self):
+        self.selected = None
 
+    def make_draggable(self, widget):
+
+            widget.bind("<Button-1>", self.on_drag_start)
+            widget.bind("<B1-Motion>", self.on_drag_motion)
+            widget.bind("<Delete>", self.rotate)
+
+
+    def rotate(self, event):
+        self.selected = event.widget
+        widget = event.widget
+        widget._drag_start_x = event.x
+        widget._drag_start_y = event.y
+        print("yeee")
+            
+
+
+    def on_drag_start(self, event):
+        self.selected = event.widget
+        widget = event.widget
+        widget._drag_start_x = event.x
+        widget._drag_start_y = event.y
+
+
+    def on_drag_motion(self, event):
+        self.selected = event.widget
+        widget = event.widget
+        x = widget.winfo_x() - widget._drag_start_x + event.x
+        y = widget.winfo_y() - widget._drag_start_y + event.y
+        widget.place(x=x, y=y)
 
 class OpenFileScreen(tk.Frame):
     def __init__(self, parent, controller):
