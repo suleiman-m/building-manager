@@ -3,6 +3,7 @@ from tkinter.ttk import *
 import tkinter as tk
 import tkinter.font as font
 from tkinter import messagebox
+import tkinter.ttk as ttk
 
 from ModelObjects import *
 from Controller import *
@@ -305,8 +306,8 @@ class ManageFloorScreen(tk.Frame):
                          foreground="white", background="#39A78E", \
                          font=(controller.font, 20), anchor=CENTER)        
         
-        #self.title.grid(row=0, column=0, columnspan=3, sticky="we")
-        self.title.place(relx=0.5, rely=0.0250, anchor=CENTER, height=30)
+        self.title.grid(row=0, column=0, columnspan=3, sticky="we")
+        #self.title.place(relx=0.5, rely=0.0250, anchor=CENTER, height=30)
         
         self.HP_btn = Button(self, text="Home Page", 
            style="TButton", command=lambda: controller.choose_frame("HP"))        
@@ -315,17 +316,84 @@ class ManageFloorScreen(tk.Frame):
            width="21")
         self.VCB_btn = Button(self, text="View Current Blueprint", 
            style="TButton", command=lambda: controller.choose_frame("VCB"), \
-           width="23")  
-        
-        #self.HP_btn.grid(row=1, column=0, sticky="we")
-        #self.MB_btn.grid(row=1, column=1, sticky="we")
-        #self.VCB_btn.grid(row=1, column=2, sticky="we") 
-        
-        self.HP_btn.place(x=0, y=27)
-        self.MB_btn.place(x=230, y=27)
-        self.VCB_btn.place(x=470, y=27)         
+           width="23") 
     
-        return    
+        
+        self.HP_btn.grid(row=1, column=0, sticky="we")
+        self.MB_btn.grid(row=1, column=1, sticky="we")
+        self.VCB_btn.grid(row=1, column=2, sticky="we") 
+        self.br1 = Label(self, text=" ", background="white", \
+                         font=(controller.font, 100))
+        self.br1.grid(row=9, column=0)                 
+        
+        
+        
+        self.roomNum = Label(self, text="Room Number: ", background="white", \
+                         font=(controller.font, 15), anchor=E, foreground="blue")
+        self.roomNum.grid(row=2, column=0, sticky="we")  
+        self.roomNumField = Entry(self, foreground="black")
+        self.roomNumField.insert(0, "") 
+        self.roomNumField.grid(row=2, column=1, sticky="we")
+        
+        
+        self.roomType = Label(self, text="Room Type: ", background="white", \
+                         font=(controller.font, 15), anchor=E, foreground="blue")
+        self.roomType.grid(row=3, column=0, sticky="we")  
+        self.roomTypeField = Entry(self, foreground="black")
+        self.roomTypeField.insert(0, "") 
+        self.roomTypeField.grid(row=3, column=1, sticky="we")
+        
+        self.size = Label(self, text="Square Footage: ", background="white", \
+                         font=(controller.font, 15), anchor=E, foreground="blue")
+        self.size.grid(row=4, column=0, sticky="we")  
+        self.sizeField = Entry(self, foreground="black")
+        self.sizeField.insert(0, "")
+        self.sizeField.grid(row=4, column=1, sticky="we")
+        
+        self.location = Label(self, text="Location: ", background="white", \
+                         font=(controller.font, 15), anchor=E, foreground="blue")
+        self.location.grid(row=5, column=0, sticky="we")  
+        self.location = Entry(self, foreground="black")
+        self.location.insert(0, "")
+        self.location.grid(row=5, column=1, sticky="we")  
+        
+        self.furnished = Label(self, text="Furnished: ", background="white", \
+                         font=(controller.font, 15), anchor=E, foreground="blue")
+        self.furnished.grid(row=6, column=0, sticky="we")  
+        self.furnished = Radiobutton(self,  text = "Yes")
+        self.furnished.grid(row=6, column=1, sticky="we")
+        self.furnished = Radiobutton(self,  text = "No")
+        self.furnished.grid(row=6, column=2, sticky="we")        
+             
+
+        self.addRoom = Button(self, text="Add Room", command=lambda: self.controller.model.b1.mod_room("add"))
+        self.addRoom.grid(row=7, column=2, sticky="we")
+        
+        self.removeRoom = Button(self, text="Remove Room", command=lambda: self.controller.model.b1.mod_room("del"))
+        self.removeRoom.grid(row=8, column=2, sticky="we")
+        
+        
+        self.tree = ttk.Treeview(self,
+                                 columns=('Room number','Room Type','Square Footage','Location'),show=["headings"])
+     
+        self.tree.heading('#1', text='Room Number')
+        self.tree.heading('#2', text='Room Type')
+        self.tree.heading('#3', text='Square Footage')
+        self.tree.heading('#4', text='Location')
+        
+        self.tree.column('#1', width="50")
+        self.tree.column('#2', width="50")
+        self.tree.column('#0', width="50")
+        self.tree.column('#3', width="50")
+        self.tree.column('#4', width="50")
+        self.tree.grid(row=9, columnspan=3, sticky='nsew')
+        self.treeview = self.tree   
+     
+        #self.HP_btn.place(x=0, y=27)
+        #self.MB_btn.place(x=230, y=27)
+        #self.VCB_btn.place(x=470, y=27)         
+    
+        return      
 
 class ViewBlueprintScreen(tk.Frame):
     def __init__(self, parent, controller):
