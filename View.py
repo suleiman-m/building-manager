@@ -252,7 +252,7 @@ class ManageBuildingScreen(tk.Frame):
         self.address = Label(self, text="Address: ", background="white", \
                          font=(controller.font, 15), anchor=E, foreground="blue")
         self.address.grid(row=2, column=0, sticky="we")  
-        self.addressField = Entry(self, foreground="black")
+        self.addressField = Entry(self, foreground="black", background=background)
         self.addressField.insert(0, "1055-A Forestwood Drive")
         self.addressField.config(state=DISABLED)
         self.addressField.grid(row=2, column=1, sticky="we")
@@ -260,7 +260,7 @@ class ManageBuildingScreen(tk.Frame):
         self.region = Label(self, text="Region: ", background="white", \
                          font=(controller.font, 15), anchor=E, foreground="blue")
         self.region.grid(row=3, column=0, sticky="we")  
-        self.regionField = Entry(self, foreground="black")
+        self.regionField = Entry(self, foreground="black", background=background)
         self.regionField.insert(0, "Missisauga, ON, Canada")
         self.regionField.config(state=DISABLED)
         self.regionField.grid(row=3, column=1, sticky="we")
@@ -268,7 +268,7 @@ class ManageBuildingScreen(tk.Frame):
         self.postalCode = Label(self, text="Postal Code: ", background="white", \
                          font=(controller.font, 15), anchor=E, foreground="blue")
         self.postalCode.grid(row=4, column=0, sticky="we")  
-        self.postalCode = Entry(self, foreground="black")
+        self.postalCode = Entry(self, foreground="black", background=background)
         self.postalCode.insert(0, "L5C 1T6")
         self.postalCode.config(state=DISABLED)
         self.postalCode.grid(row=4, column=1, sticky="we")  
@@ -276,7 +276,7 @@ class ManageBuildingScreen(tk.Frame):
         self.totalStories = Label(self, text="Building Details: ", background="white", \
                          font=(controller.font, 15), anchor=E, foreground="blue")
         self.totalStories.grid(row=5, column=0, sticky="we")  
-        self.totalStories = Entry(self, foreground="black")
+        self.totalStories = Entry(self, foreground="black", background=background)
         self.totalStories.insert(0, "Stories: 8 | Modifiable Floors: 7")
         self.totalStories.config(state=DISABLED)
         self.totalStories.grid(row=5, column=1, sticky="we")
@@ -299,7 +299,7 @@ class ManageBuildingScreen(tk.Frame):
 
 class ManageFloorScreen(tk.Frame):
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent, width="640", height="480")
+        tk.Frame.__init__(self, parent, width="640", height="480", background=background)
         self.controller = controller
         
         self.title= Label(self, text="Floor Manager", width="56",
@@ -322,55 +322,48 @@ class ManageFloorScreen(tk.Frame):
         self.HP_btn.grid(row=1, column=0, sticky="we")
         self.MB_btn.grid(row=1, column=1, sticky="we")
         self.VCB_btn.grid(row=1, column=2, sticky="we") 
-        self.br1 = Label(self, text=" ", background="white", \
-                         font=(controller.font, 100))
-        self.br1.grid(row=9, column=0)                 
+            
+        self.roomNum = Label(self, text="Room Number: ", background=background, 
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")  
+        self.roomNumField = Entry(self, foreground="black", background=background)
+        self.roomNum.grid(row=2, column=0, sticky="we", pady=(25,0))
+        self.roomNumField.grid(row=2, column=1,  sticky="we", pady=(25,0))
         
         
-        
-        self.roomNum = Label(self, text="Room Number: ", background="white", \
-                         font=(controller.font, 15), anchor=E, foreground="blue")
-        self.roomNum.grid(row=2, column=0, sticky="we")  
-        self.roomNumField = Entry(self, foreground="black")
-        self.roomNumField.insert(0, "") 
-        self.roomNumField.grid(row=2, column=1, sticky="we")
-        
-        
-        self.roomType = Label(self, text="Room Type: ", background="white", \
-                         font=(controller.font, 15), anchor=E, foreground="blue")
+        self.roomType = Label(self, text="Room Type: ", background=background, 
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")  
+        self.roomTypeField = Entry(self, foreground="black", background=background)
         self.roomType.grid(row=3, column=0, sticky="we")  
-        self.roomTypeField = Entry(self, foreground="black")
-        self.roomTypeField.insert(0, "") 
         self.roomTypeField.grid(row=3, column=1, sticky="we")
         
-        self.size = Label(self, text="Square Footage: ", background="white", \
-                         font=(controller.font, 15), anchor=E, foreground="blue")
+        self.size = Label(self, text="Square Footage: ", background=background, \
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
         self.size.grid(row=4, column=0, sticky="we")  
-        self.sizeField = Entry(self, foreground="black")
-        self.sizeField.insert(0, "")
+        self.sizeField = Entry(self, foreground="black", background=background)
         self.sizeField.grid(row=4, column=1, sticky="we")
         
-        self.location = Label(self, text="Location: ", background="white", \
-                         font=(controller.font, 15), anchor=E, foreground="blue")
+        self.location = Label(self, text="Location: ", background=background, \
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
         self.location.grid(row=5, column=0, sticky="we")  
-        self.location = Entry(self, foreground="black")
-        self.location.insert(0, "")
+        self.location = Entry(self, foreground="black", background=background)
         self.location.grid(row=5, column=1, sticky="we")  
         
-        self.furnished = Label(self, text="Furnished: ", background="white", \
-                         font=(controller.font, 15), anchor=E, foreground="blue")
+        self.furnished = Label(self, text="Furnished: ", background=background, \
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
         self.furnished.grid(row=6, column=0, sticky="we")  
-        self.furnished = Radiobutton(self,  text = "Yes")
-        self.furnished.grid(row=6, column=1, sticky="we")
-        self.furnished = Radiobutton(self,  text = "No")
-        self.furnished.grid(row=6, column=2, sticky="we")        
+        self.furnishedYes = tk.Radiobutton(self,  text = "Yes", background=background,
+                    font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
+        self.furnishedYes.grid(row=6, column=1, sticky="w")
+        self.furnishedNo = tk.Radiobutton(self,  text = "No", background=background,
+                    font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
+        self.furnishedNo.grid(row=6, column=1, sticky="e")        
              
 
         self.addRoom = Button(self, text="Add Room", command=lambda: self.controller.model.b1.mod_room("add"))
-        self.addRoom.grid(row=7, column=2, sticky="we")
+        self.addRoom.grid(row=7, column=1, sticky="we", padx=10, pady=(20,10))
         
         self.removeRoom = Button(self, text="Remove Room", command=lambda: self.controller.model.b1.mod_room("del"))
-        self.removeRoom.grid(row=8, column=2, sticky="we")
+        self.removeRoom.grid(row=7, column=2, sticky="we", padx=10, pady=(20,10))
         
         
         self.tree = ttk.Treeview(self,
@@ -417,71 +410,68 @@ class ViewBlueprintScreen(tk.Frame):
         self.MB_btn.grid(row=1, column=1, sticky="we")
         self.MF_btn.grid(row=1, column=2, sticky="we")         
         
-        dragger = Dragger()
+        self.dragger = Dragger()
         
-        canvas = tk.Canvas(self, width=800, height=500, background="white")
-        canvas.grid(row=2, column=0, columnspan=3,sticky="nsw" ) 
+        #Canvas for the floor plan stuff, scrollbar for the floor plan items
+        # self.canvas = tk.Canvas(self, width=750, height=500, background="white")
+        # self.canvas.grid(row=2, column=0, columnspan=3,sticky="nsw") 
+        # scroll_y = tk.Scrollbar(self, orient="vertical", command=  self.canvas.yview)
+        # scroll_y.grid(row=2, column=0, sticky="nse")
+        # self.canvas.configure(scrollregion=  self.canvas.bbox("all"))
+        # self.canvas.configure(yscrollcommand=scroll_y.set)
 
-        scroll_y = tk.Scrollbar(self, orient="vertical", command=canvas.yview)
-        scroll_y.grid(row=2, column=0, sticky="nse")
-        canvas.configure(scrollregion=canvas.bbox("all"))
-        canvas.configure(yscrollcommand=scroll_y.set)
-        
-        directory = 'images'
-        self.objects = {}
-        self.filenames =[]
-        self.photos = []
-        self.images=[]
 
-        def onObjectClick(event, filename): 
+#         directory = 'images'
+
+#         def onObjectClick(event, filename): 
             
-            index = 0                 
-            for name in self.filenames:
-                if filename == name: 
+#             index = 0                 
+#             for name in self.filenames:
+#                 if filename == name: 
     
-                    self.object = Label(self, text=filename, image=self.photos[index], background=background)
-                    dragger.make_draggable(self.object)                 
-                    self.objects[filename] = self.object
+#                     self.object = Label(self, text=filename, image=self.photos[index], background=background)
+#                     dragger.make_draggable(self.object)                 
+#                     self.objects[filename] = self.object
 
-                    self.objects[filename].grid(row=2,column=2)    
-                    print(filename)
+#                     self.objects[filename].grid(row=2,column=2)    
+#                     print(filename)
                     
-                index +=1
-        self.rotation = 0
-        def createItems():
-            canvas.delete("all")
-            self.objects = {}
-            self.filenames =[]
-            self.photos = []
+#                 index +=1
+#         self.rotation = 0
+#         def createItems():
+#             canvas.delete("all")
+#             self.objects = {}
+#             self.filenames =[]
+#             self.photos = []
             
-            x = 100
-            y = 10
-            canvas.create_rectangle(-20,0, 250, 2500, fill="#a7d8b8")
-            for filename in os.listdir(directory):
-                self.filenames.append(filename)
-                self.image = Image.open("images/" + filename)
-                self.images.append(self.image)
+#             x = 100
+#             y = 10
+#             canvas.create_rectangle(-20,0, 250, 2500, fill="#a7d8b8")
+#             for filename in os.listdir(directory):
+#                 self.filenames.append(filename)
+#                 self.image = Image.open("images/" + filename)
+#                 self.images.append(self.image)
         
 
-                self.photo = ImageTk.PhotoImage(self.image)
-                self.photos.append(self.photo)
-                canvas.create_image(x,y,image=self.photo, tags=filename, anchor="n")
-                canvas.tag_bind(filename, '<ButtonPress-1>', lambda event, arg=filename: onObjectClick(event, arg))
-                y+=(self.photo.height() +30)
-            canvas.configure(scrollregion=canvas.bbox("all"))
-        createItems()
-        self.rotation = 0
-        def rotate():
-            index = 0
-            for image in self.images:
-                image = image.transpose(Image.ROTATE_90)
-                image.save("images/" + self.filenames[index])
+#                 self.photo = ImageTk.PhotoImage(self.image)
+#                 self.photos.append(self.photo)
+#                 canvas.create_image(x,y,image=self.photo, tags=filename, anchor="n")
+#                 canvas.tag_bind(filename, '<ButtonPress-1>', lambda event, arg=filename: onObjectClick(event, arg))
+#                 y+=(self.photo.height() +30)
+#             canvas.configure(scrollregion=canvas.bbox("all"))
+#         createItems()
+#         self.rotation = 0
+#         def rotate():
+#             index = 0
+#             for image in self.images:
+#                 image = image.transpose(Image.ROTATE_90)
+#                 image.save("images/" + self.filenames[index])
 
-            canvas.update_idletasks
-        rotateBTN = Button(self, text="Rotate", command=rotate)
-        rotateBTN.grid(row=3, column=2)
+#             canvas.update_idletasks
+#         rotateBTN = Button(self, text="Rotate", command=rotate)
+#         rotateBTN.grid(row=3, column=2)
 
-# image = image.transpose(Image.ROTATE_90)
+# # image = image.transpose(Image.ROTATE_90)
         return 
 class Dragger:
     def __init__(self):
