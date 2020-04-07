@@ -7,6 +7,9 @@ from tkinter import messagebox
 from ModelObjects import *
 from Controller import *
 from PIL import ImageTk, Image
+import os
+
+background="#F1FBF7"
 
 ''' The visual interface for the application.'''
 class View():
@@ -36,9 +39,9 @@ class View():
         
         # Styling and Tkinter macOS bug adjustments
         self.font = "Roboto"
-        self.background="#F1FBF7"
+  
         self.root.option_add('*tearOff', FALSE)
-        self.root.configure(width="640", height="480", background=self.background)
+        self.root.configure(width="640", height="480", background=background)
         style = Style()
         style.theme_use('classic') 
         style.configure("TButton", highlightcolor="#216657", \
@@ -51,7 +54,7 @@ class View():
         self.main_frame.grid_rowconfigure(0, weight=1)
         self.main_frame.grid_columnconfigure(0, weight=1)
         
-        self.projectInfo = tk.Label(self.root, text="Building No. ID:  0 (No File Loaded)", background=self.background, \
+        self.projectInfo = tk.Label(self.root, text="Building No. ID:  0 (No File Loaded)", background=background, \
                                     font=(self.font, 12), anchor=W)
         self.projectInfo.pack(side="bottom", anchor="w", pady=(0,20))
         
@@ -170,8 +173,8 @@ class View():
 class HomePage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, width="640", height="480")
-        self.background="#F1FBF7"
-        self.config(background=self.background)
+        
+        self.config(background=background)
         self.controller = controller
 
         self.title= Label(self, text="Building Planner", width="55", \
@@ -195,25 +198,25 @@ class HomePage(tk.Frame):
         image = Image.open("building-icon.png")
         image = image.resize((200, 150), Image.ANTIALIAS)
         self.photo = ImageTk.PhotoImage(image)
-        self.logo = Label(self, text="Logo", image=self.photo, background=self.background)
+        self.logo = Label(self, text="Logo", image=self.photo, background=background)
         self.logo.grid(row=2, column=0, sticky="NSEW", pady=(75,75), padx=(10,0))
      
         self.welcome = Label(self, text="\nWelcome to Building Manager v1.0!" +
         "\nHere, you can register a building or office lease to modify and manage workspaces, " +
         " floor-plans, blueprints, HVAC, furnishing and story/room costs.\n", 
-            background=self.background #"#39A78E"
+            background=background #"#39A78E"
             , font=(controller.font, 14), 
             anchor=CENTER, wraplength=350, borderwidth=1, relief="solid", padding=0)
         self.welcome.grid(row=2, column=1, sticky="we", columnspan=2, padx=(0,10))  
 
 
-        self.getStarted = Label(self, text="Get Started: ", background=self.background, \
+        self.getStarted = Label(self, text="Get Started: ", background=background, \
                                 foreground="#39A78E", font=(controller.font, 20))
-        self.getStarted.grid(row=10, column=0, sticky="we",padx=(10,0))
+        self.getStarted.grid(row=3, column=0, sticky="we",padx=(10,0))
         
         self.gsMessage = Label(self, text="Create a new file or load a pre-existing one using the File menu in the top left of your screen.", \
-            foreground="black", font=(controller.font, 12), background=self.background)
-        self.gsMessage.grid(row=11, column=0, columnspan=3, sticky="we", padx=(10,0)  )
+            foreground="black", font=(controller.font, 12), background=background)
+        self.gsMessage.grid(row=4, column=0, columnspan=3, sticky="we", padx=(10,0)  )
         
         return     
 
@@ -326,7 +329,7 @@ class ManageFloorScreen(tk.Frame):
 
 class ViewBlueprintScreen(tk.Frame):
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent, width="640", height="480")
+        tk.Frame.__init__(self, parent, width="640", height="480", background=background)
         self.controller = controller
         
         self.title= Label(self, text="Floor-Plan Blueprint Viewer", width="55",\
@@ -345,8 +348,79 @@ class ViewBlueprintScreen(tk.Frame):
         self.HP_btn.grid(row=1, column=0, sticky="we")
         self.MB_btn.grid(row=1, column=1, sticky="we")
         self.MF_btn.grid(row=1, column=2, sticky="we")         
-    
+        
+        def make_draggable(widget):
+            widget.bind("<Button-1>", on_drag_start)
+            widget.bind("<B1-Motion>", on_drag_motion)
+
+        def on_drag_start(event):
+            widget = event.widget
+            widget._drag_start_x = event.x
+            widget._drag_start_y = event.y
+
+        def on_drag_motion(event):
+            widget = event.widget
+            x = widget.winfo_x() - widget._drag_start_x + event.x
+            y = widget.winfo_y() - widget._drag_start_y + event.y
+            widget.place(x=x, y=y)
+       
+        
+        
+        canvas = tk.Canvas(self, width=800, height=500, background="#a7d8b8")
+        
+        canvas.grid(row=2, column=0, columnspan=3) 
+
+
+        scroll_y = tk.Scrollbar(self, orient="vertical", command=canvas.yview)
+        scroll_y.grid(row=2, column=2, sticky="nse")
+        canvas.configure(scrollregion=canvas.bbox("all"))
+        canvas.configure(yscrollcommand=scroll_y.set)
+        
+             
+
+
+        directory = 'images'
+        self.floor_plan_objects = []
+        self.filenames =[]
+        self.photos = []
+        self.gridded =[]
+
+        def onObjectClick(event): 
+            index = 0                 
+            for name in self.filenames:
+                if filename == name: 
+                    self.gridded_object = self.floor_plan_objects[index].grid(row=3,column=2)
+                    self.gridded.append(self.gridded_object)
+                index +=1
+                print(name)
+
+        row = 3
+        column=0
+        x = 100
+        y = 0
+        for filename in os.listdir(directory):
+            self.filenames.append(filename)
+        
+            image = Image.open("images/" + filename)
+            self.photo = ImageTk.PhotoImage(image)
+            self.photos.append(self.photo)
+            self.object = Label(self, text=filename, image=self.photo, background=background)
+            make_draggable(self.object)
+            self.floor_plan_objects.append(self.object)           
+            
+            canvas.create_image(x,y,image=self.photo, tags=filename)
+            canvas.configure(scrollregion=canvas.bbox("all"))
+            canvas.tag_bind(filename, '<ButtonPress-1>', lambda event, arg=filename: onObjectClick(event))
+            y+=self.photo.height()
+            y+=100
+            row+=1
+        
+        
+ 
+
+
         return 
+
 
 class OpenFileScreen(tk.Frame):
     def __init__(self, parent, controller):
@@ -390,3 +464,5 @@ class OpenFileScreen(tk.Frame):
             controller.open_file("submit button", self.numForm.get())
         
         return
+
+
