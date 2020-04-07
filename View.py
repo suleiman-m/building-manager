@@ -207,8 +207,8 @@ class HomePage(tk.Frame):
         " floor-plans, blueprints, HVAC, furnishing and story/room costs.\n", 
             background=background #"#39A78E"
             , font=(controller.font, 14), 
-            anchor=CENTER, wraplength=350, borderwidth=1, relief="solid", padding=0)
-        self.welcome.grid(row=2, column=1, sticky="we", columnspan=2, padx=(0,10))  
+            anchor=CENTER, wraplength=500, borderwidth=2, relief="solid", padding=0)
+        self.welcome.grid(row=2, column=1, sticky="ew", columnspan=2, padx=(0,0))  
 
 
         self.getStarted = Label(self, text="Get Started: ", background=background, \
@@ -223,7 +223,7 @@ class HomePage(tk.Frame):
 
 class ManageBuildingScreen(tk.Frame):
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent, width="640", height="480")
+        tk.Frame.__init__(self, parent, width="640", height="480", background=background)
         self.controller = controller 
         
         self.title= Label(self, text="Building Manager", \
@@ -244,56 +244,51 @@ class ManageBuildingScreen(tk.Frame):
         self.MF_btn.grid(row=1, column=1, sticky="we")
         self.VCB_btn.grid(row=1, column=2, sticky="we") 
         
-        #Blank Row 1
-        self.br1 = Label(self, text=" ", background="white", \
-                         font=(controller.font, 100))
-        self.br1.grid(row=9, column=0)          
-        
-        self.address = Label(self, text="Address: ", background="white", \
-                         font=(controller.font, 15), anchor=E, foreground="blue")
-        self.address.grid(row=2, column=0, sticky="we")  
-        self.addressField = Entry(self, foreground="black", background=background)
+        self.address = Label(self, text="Address: ", background=background, 
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
+        self.address.grid(row=2, column=0, sticky="we", pady=(25,0))  
+        self.addressField = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
         self.addressField.insert(0, "1055-A Forestwood Drive")
-        self.addressField.config(state=DISABLED)
-        self.addressField.grid(row=2, column=1, sticky="we")
+        self.addressField.config(state=DISABLED, disabledbackground=background)
+        self.addressField.grid(row=2, column=1, sticky="we",  pady=(25,0))
         
-        self.region = Label(self, text="Region: ", background="white", \
-                         font=(controller.font, 15), anchor=E, foreground="blue")
+        self.region = Label(self, text="Region: ", background=background, 
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
         self.region.grid(row=3, column=0, sticky="we")  
-        self.regionField = Entry(self, foreground="black", background=background)
+        self.regionField = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
         self.regionField.insert(0, "Missisauga, ON, Canada")
-        self.regionField.config(state=DISABLED)
+        self.regionField.config(state=DISABLED, disabledbackground=background)
         self.regionField.grid(row=3, column=1, sticky="we")
         
-        self.postalCode = Label(self, text="Postal Code: ", background="white", \
-                         font=(controller.font, 15), anchor=E, foreground="blue")
+        self.postalCode = Label(self, text="Postal Code: ", background=background, 
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
         self.postalCode.grid(row=4, column=0, sticky="we")  
-        self.postalCode = Entry(self, foreground="black", background=background)
+        self.postalCode = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
         self.postalCode.insert(0, "L5C 1T6")
-        self.postalCode.config(state=DISABLED)
+        self.postalCode.config(state=DISABLED, disabledbackground=background)
         self.postalCode.grid(row=4, column=1, sticky="we")  
         
-        self.totalStories = Label(self, text="Building Details: ", background="white", \
-                         font=(controller.font, 15), anchor=E, foreground="blue")
+        self.totalStories = Label(self, text="Building Details: ", background=background, 
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
         self.totalStories.grid(row=5, column=0, sticky="we")  
-        self.totalStories = Entry(self, foreground="black", background=background)
+        self.totalStories = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
         self.totalStories.insert(0, "Stories: 8 | Modifiable Floors: 7")
-        self.totalStories.config(state=DISABLED)
+        self.totalStories.config(state=DISABLED, disabledbackground=background)
         self.totalStories.grid(row=5, column=1, sticky="we")
         
-        self.totalCost = Label(self, text="Total Construction Cost: ", background="white", \
-                         font=(controller.font, 15), anchor=E, foreground="red")
+        self.totalCost = Label(self, text="Total Construction Cost: ", background=background, 
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
         self.totalCost.grid(row=6, column=0, sticky="we")  
-        self.totalCost = Entry(self, foreground="red")
+        self.totalCost = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
         self.totalCost.insert(0, "$15, 647.97 CAD")
-        self.totalCost.config(state=DISABLED)
+        self.totalCost.config(state=DISABLED, disabledbackground=background, disabledforeground="red")
         self.totalCost.grid(row=6, column=1, sticky="we")         
         
         self.addFloor = Button(self, text="Add Floor", command=lambda: self.controller.model.b1.mod_story("add"))
-        self.addFloor.grid(row=7, column=2, sticky="we")
+        self.addFloor.grid(row=7, column=1, sticky="we", padx=10, pady=(25,0))
         
         self.removeFloor = Button(self, text="Remove Floor", command=lambda: self.controller.model.b1.mod_story("del"))
-        self.removeFloor.grid(row=8, column=2, sticky="we")
+        self.removeFloor.grid(row=7, column=2, sticky="we", padx=10, pady=(25,0))
     
         return    
 
@@ -302,7 +297,7 @@ class ManageFloorScreen(tk.Frame):
         tk.Frame.__init__(self, parent, width="640", height="480", background=background)
         self.controller = controller
         
-        self.title= Label(self, text="Floor Manager", width="56",
+        self.title= Label(self, text="Floor Manager", width="55",
                          foreground="white", background="#39A78E", \
                          font=(controller.font, 20), anchor=CENTER)        
         
@@ -325,27 +320,27 @@ class ManageFloorScreen(tk.Frame):
             
         self.roomNum = Label(self, text="Room Number: ", background=background, 
                          font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")  
-        self.roomNumField = Entry(self, foreground="black", background=background)
+        self.roomNumField = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
         self.roomNum.grid(row=2, column=0, sticky="we", pady=(25,0))
         self.roomNumField.grid(row=2, column=1,  sticky="we", pady=(25,0))
         
         
         self.roomType = Label(self, text="Room Type: ", background=background, 
                          font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")  
-        self.roomTypeField = Entry(self, foreground="black", background=background)
+        self.roomTypeField = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
         self.roomType.grid(row=3, column=0, sticky="we")  
         self.roomTypeField.grid(row=3, column=1, sticky="we")
         
         self.size = Label(self, text="Square Footage: ", background=background, \
                          font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
         self.size.grid(row=4, column=0, sticky="we")  
-        self.sizeField = Entry(self, foreground="black", background=background)
+        self.sizeField = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
         self.sizeField.grid(row=4, column=1, sticky="we")
         
         self.location = Label(self, text="Location: ", background=background, \
                          font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
         self.location.grid(row=5, column=0, sticky="we")  
-        self.location = Entry(self, foreground="black", background=background)
+        self.location = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
         self.location.grid(row=5, column=1, sticky="we")  
         
         self.furnished = Label(self, text="Furnished: ", background=background, \
@@ -521,16 +516,12 @@ class OpenFileScreen(tk.Frame):
            style="TButton", command=lambda: controller.choose_frame("HP"))        
         self.HP_btn.grid(row=1, column=0, columnspan=3, sticky="we")
         
-        #Blank Row 1
-        self.br1 = Label(self, text=" ", background="white", \
-                         font=(controller.font, 100))
-        self.br1.grid(row=2, column=0)         
-        
         valBuildNum = (self.register(self.is_Num), "%S")
         self.enterNum = Label(self, text="Enter Building ID No. Here: ", anchor=W)
         self.enterNum.grid(row=3, column=0, sticky="we")
         
-        self.numForm = Entry(self, validate="key", validatecommand=valBuildNum)
+        self.numForm = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
+        self.numForm.config(validate="key", validatecommand=valBuildNum)
         self.numForm.grid(row=3, column=1, sticky="we")
         
         self.accept_btn = Button(self, text="Accept", style="TButton", command=self.submit)
