@@ -83,7 +83,7 @@ class View():
         self.frames["Open File"] = self.frame4
         
         self.goScreen("Home Page")
-        
+       
         return
     
     def goScreen(self, screenName):
@@ -144,7 +144,9 @@ class View():
         # Open pop-up form asking user to fill out and submit initial details.
         # Store info in self.new_building_details array.
         self.controller.set_up("new file")
+        self.goScreen("Building Manager")
         
+
         return
     
     def open_file(self, caller, num):
@@ -261,7 +263,6 @@ class ManageBuildingScreen(tk.Frame):
                          font=(controller.font, 20), anchor=CENTER)        
         
         self.title.grid(row=0, column=0, columnspan=3, sticky="we")
-        # self.title.place(relx=0.5, rely=0.0250, anchor=CENTER)
         
         self.HP_btn = Button(self, text="Home Page", 
            style="TButton", command=lambda: controller.choose_frame("HP"))        
@@ -278,7 +279,6 @@ class ManageBuildingScreen(tk.Frame):
                          font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
         self.address.grid(row=2, column=0, sticky="we", pady=(25,0))  
         self.addressField = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
-        self.addressField.insert(0, "1055-A Forestwood Drive")
         self.addressField.config(state=DISABLED, disabledbackground=background)
         self.addressField.grid(row=2, column=1, sticky="we",  pady=(25,0))
         
@@ -286,7 +286,6 @@ class ManageBuildingScreen(tk.Frame):
                          font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
         self.region.grid(row=3, column=0, sticky="we")  
         self.regionField = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
-        self.regionField.insert(0, "Missisauga, ON, Canada")
         self.regionField.config(state=DISABLED, disabledbackground=background)
         self.regionField.grid(row=3, column=1, sticky="we")
         
@@ -294,7 +293,6 @@ class ManageBuildingScreen(tk.Frame):
                          font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
         self.postalCode.grid(row=4, column=0, sticky="we")  
         self.postalCode = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
-        self.postalCode.insert(0, "L5C 1T6")
         self.postalCode.config(state=DISABLED, disabledbackground=background)
         self.postalCode.grid(row=4, column=1, sticky="we")  
         
@@ -302,7 +300,6 @@ class ManageBuildingScreen(tk.Frame):
                          font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
         self.totalStories.grid(row=5, column=0, sticky="we")  
         self.totalStories = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
-        self.totalStories.insert(0, "Stories: 8 | Modifiable Floors: 7")
         self.totalStories.config(state=DISABLED, disabledbackground=background)
         self.totalStories.grid(row=5, column=1, sticky="we")
         
@@ -310,7 +307,6 @@ class ManageBuildingScreen(tk.Frame):
                          font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
         self.totalCost.grid(row=6, column=0, sticky="we")  
         self.totalCost = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
-        self.totalCost.insert(0, "$15, 647.97 CAD")
         self.totalCost.config(state=DISABLED, disabledbackground=background, disabledforeground="red")
         self.totalCost.grid(row=6, column=1, sticky="we")         
         
@@ -319,8 +315,65 @@ class ManageBuildingScreen(tk.Frame):
         
         self.removeFloor = Button(self, text="Remove Floor", command=lambda: controller.controller.model.currBuild.mod_story("del"))
         self.removeFloor.grid(row=7, column=2, sticky="we", pady=(25,0))
+
+        # style = Style()
+        # style.theme_use('classic') 
+        # # Create and style the treeview
+        # style.configure("mystyle.Treeview", font=(font, 9)) # Modify the font of the body
+        # style.configure("mystyle.Treeview.Heading", font=(font, 11,'bold')) # Modify the font of the headings
+        # # style.layout("mystyle.Treeview", [('mystyle.Treeview.treearea', {'sticky': 'nswe'})]) # Remove the borders
+
+        
+        # self.headers = ["Floor", "Square Footage", "Total Floor Cost",
+        #         "Bathrooms + Cost", "Conference Rooms + Cost",
+        #         "Cubicles + Cost", "Offices + Cost", "Breakrooms + Cost",
+        #         "Printing/Mailing Rooms + Cost"]
+        # self.tv = Treeview(self, columns=self.headers, 
+        #                     height=20, selectmode='browse', style="mystyle.Treeview")
+        # self.tv.heading("#0", text="Floor")
+        # self.tv.column("#0",minwidth=0,width=40, stretch=NO) 
+        
+        # # configure the treeview headings
+        # floor_number = 0
+        # for header in self.headers[1:]:
+        #     col = str(floor_number)
+        #     self.tv.heading(col, text=header)
+        #     self.tv.column(col,minwidth=0,width=150, stretch=NO) 
+        #     floor_number +=1
+
+        # # Add both a horizontal and vertical scrollbar
+        # self.scrollbarx = Scrollbar(self, orient=tk.HORIZONTAL,
+        # command=self.tv.xview)
+        # self.tv.configure(xscrollcommand=self.scrollbarx.set)
+        
+        # self.scrollbary = Scrollbar(self, orient=tk.VERTICAL,
+        # command=self.tv.yview)
+        # self.tv.configure(yscrollcommand=self.scrollbary.set)
+
+        # # grid everything for the treeview
+        # # self.tv.bind("<Double-1>", self.OnDoubleClick)
     
-        return    
+        # self.scrollbarx.grid(row=9)
+        # self.scrollbary.grid(row=8, column=2, sticky='NSE')
+        # self.tv.grid(row=8, column=0, sticky="W", columnspan=3)
+
+        return
+    def update_new_info_from_model(self):
+        pass
+    
+    def insert_existing_info(self):
+        self.addressField.insert(0, "1055-A Forestwood Drive")
+        self.addressField.config(state=DISABLED, disabledbackground=background)
+        self.regionField.insert(0, "Missisauga, ON, Canada")
+        self.regionField.config(state=DISABLED, disabledbackground=background)
+        self.postalCode.insert(0, "L5C 1T6")
+        self.postalCode.config(state=DISABLED, disabledbackground=background)
+        self.totalStories.insert(0, "Stories: 8 | Modifiable Floors: 7")
+        self.totalStories.config(state=DISABLED, disabledbackground=background)
+        self.totalCost.insert(0, "$15, 647.97 CAD")
+        self.totalCost.config(state=DISABLED, disabledbackground=background, disabledforeground="red")
+        
+        return      
 
 class ManageFloorScreen(tk.Frame):
     def __init__(self, parent, controller):
@@ -389,25 +442,22 @@ class ManageFloorScreen(tk.Frame):
         self.removeRoom.grid(row=7, column=2, sticky="w", pady=(20,10))
         
         
-        # self.tree = ttk.Treeview(self,
-        #                          columns=('Room number','Room Type','Square Footage','Location'),show=["headings"])
+        self.tree = ttk.Treeview(self,
+                                 columns=('Room number','Room Type','Square Footage','Location'),show=["headings"])
      
-        # self.tree.heading('#1', text='Room Number')
-        # self.tree.heading('#2', text='Room Type')
-        # self.tree.heading('#3', text='Square Footage')
-        # self.tree.heading('#4', text='Location')
+        self.tree.heading('#1', text='Room Number')
+        self.tree.heading('#2', text='Room Type')
+        self.tree.heading('#3', text='Square Footage')
+        self.tree.heading('#4', text='Location')
         
-        # self.tree.column('#1', width="")
-        # self.tree.column('#2', width="50")
-        # self.tree.column('#0', width="50")
-        # self.tree.column('#3', width="50")
-        # self.tree.column('#4', width="50")
-        # self.tree.grid(row=9, columnspan=3, sticky='nsew')
-        # self.treeview = self.tree   
-     
-        #self.HP_btn.place(x=0, y=27)
-        #self.MB_btn.place(x=230, y=27)
-        #self.VCB_btn.place(x=470, y=27)         
+        self.tree.column('#1', width="50")
+        self.tree.column('#2', width="50")
+        self.tree.column('#0', width="50")
+        self.tree.column('#3', width="50")
+        self.tree.column('#4', width="50")
+        self.tree.grid(row=9, columnspan=3, sticky='nsew')
+        self.treeview = self.tree   
+         
     
         return      
 
