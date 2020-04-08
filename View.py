@@ -77,12 +77,10 @@ class View():
         frame3.grid(row=0, column=0, sticky="nsew")
         self.frames["Floor-Plan Blueprint Viewer"] = frame3
         
+        # Initializing helper frames here.
         frame4 = OpenFileScreen(parent=self.main_frame, controller=self)
         frame4.grid(row=0, column=0, sticky="nsew")
         self.frames["Open File"] = frame4
-        
-        # Initializing helper frames here.
-        #pass
         
         self.goScreen("Home Page")
         
@@ -210,7 +208,6 @@ class HomePage(tk.Frame):
             anchor=CENTER, wraplength=500, borderwidth=2, relief="solid", padding=0)
         self.welcome.grid(row=2, column=1, sticky="ew", columnspan=2, padx=(0,0))  
 
-
         self.getStarted = Label(self, text="Get Started: ", background=background, \
                                 foreground="#39A78E", font=(controller.font, 20))
         self.getStarted.grid(row=3, column=0, sticky="we",padx=(10,0))
@@ -284,10 +281,10 @@ class ManageBuildingScreen(tk.Frame):
         self.totalCost.config(state=DISABLED, disabledbackground=background, disabledforeground="red")
         self.totalCost.grid(row=6, column=1, sticky="we")         
         
-        self.addFloor = Button(self, text="Add Floor", command=lambda: self.controller.model.b1.mod_story("add"))
+        self.addFloor = Button(self, text="Add Floor", command=lambda: controller.controller.model.currBuild.mod_story("add"))
         self.addFloor.grid(row=7, column=1, sticky="we", padx=10, pady=(25,0))
         
-        self.removeFloor = Button(self, text="Remove Floor", command=lambda: self.controller.model.b1.mod_story("del"))
+        self.removeFloor = Button(self, text="Remove Floor", command=lambda: controller.controller.model.currBuild.mod_story("del"))
         self.removeFloor.grid(row=7, column=2, sticky="we", padx=10, pady=(25,0))
     
         return    
@@ -354,10 +351,10 @@ class ManageFloorScreen(tk.Frame):
         self.furnishedNo.grid(row=6, column=1, sticky="e")        
              
 
-        self.addRoom = Button(self, text="Add Room", command=lambda: self.controller.model.b1.mod_room("add"))
+        self.addRoom = Button(self, text="Add Room", command=lambda: controller.controller.model.currBuild.mod_room("add"))
         self.addRoom.grid(row=7, column=1, sticky="we", padx=10, pady=(20,10))
         
-        self.removeRoom = Button(self, text="Remove Room", command=lambda: self.controller.model.b1.mod_room("del"))
+        self.removeRoom = Button(self, text="Remove Room", command=lambda: controller.controller.model.currBuild.mod_room("del"))
         self.removeRoom.grid(row=7, column=2, sticky="we", padx=10, pady=(20,10))
         
         
@@ -468,6 +465,8 @@ class ViewBlueprintScreen(tk.Frame):
 
 # # image = image.transpose(Image.ROTATE_90)
         return 
+
+
 class Dragger:
     def __init__(self):
         self.selected = None
@@ -478,15 +477,12 @@ class Dragger:
             widget.bind("<B1-Motion>", self.on_drag_motion)
             widget.bind("<Delete>", self.rotate)
 
-
     def rotate(self, event):
         self.selected = event.widget
         widget = event.widget
         widget._drag_start_x = event.x
         widget._drag_start_y = event.y
         print("yeee")
-            
-
 
     def on_drag_start(self, event):
         self.selected = event.widget
@@ -494,13 +490,13 @@ class Dragger:
         widget._drag_start_x = event.x
         widget._drag_start_y = event.y
 
-
     def on_drag_motion(self, event):
         self.selected = event.widget
         widget = event.widget
         x = widget.winfo_x() - widget._drag_start_x + event.x
         y = widget.winfo_y() - widget._drag_start_y + event.y
         widget.place(x=x, y=y)
+        
 
 class OpenFileScreen(tk.Frame):
     def __init__(self, parent, controller):

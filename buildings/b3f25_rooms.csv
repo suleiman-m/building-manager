@@ -1,0 +1,4 @@
+﻿Room,Square Footage,Total Cost,Room Type,Furnished,Location,Furniture
+301,150,$145.87 USD,Conference Room,YES,South Wing,"20 Office Chairs, 15 Microphones, 1 Conference Desk (25 Seats), 2 Projectors, 3 Lamps, 4 Overhead Lights, 2 Door Entrances, 5 Windows"
+302,215,$6765.17 USD,Bathroom,NO,Northeast Corner,Not Furnished
+303,2500,"$15, 097.18 USD",Auditorium,YES,West End,"150 Theatre Seats, 1 Stage, 2 Curtains, 3 Double-Door Entrances, 7 Overhead Stage Lights, 5 Mounted Theatre Speakers"

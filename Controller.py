@@ -50,8 +50,7 @@ class Controller:
             
         self.model = Model(self, mode)
         
-        # Must change self.chosen_building to avoid attribute error later 
-        # for new-file option.
+        # Must change self.chosen_building to avoid attribute error later for new-file option.
         # Make (Office Space Lease) variable for Site Construction
         self.view.projectInfo.config(text="Building No. ID: " + self.chosen_building \
                                      + "(Office Space Lease)", foreground="black")
