@@ -118,7 +118,7 @@ class Model:
                         self.currBuild.postalCode = row[3]
                         self.currBuild.total_cost = row[7]
                         
-                        floorsFile = "/buildings/b" + str(row[0]) + "_floors.csv"
+                        floorFile = "/buildings/b" + str(row[0]) + "_floors.csv"
                         with open(floorFile) as floors:
                             readFloors = csv.reader(floors, delimiter=',')
                             # Setting up dictionary keys.

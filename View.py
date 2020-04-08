@@ -450,37 +450,6 @@ class ViewBlueprintScreen(tk.Frame):
         self.hints.grid(row=4, column=0, columnspan=3)
 
         return 
-
-class Dragger:
-    def __init__(self):
-        self.selected = None
-
-    def make_draggable(self, widget):
-
-            widget.bind("<Button-1>", self.on_drag_start)
-            widget.bind("<B1-Motion>", self.on_drag_motion)
-            widget.bind("<Delete>", self.rotate)
-
-    def rotate(self, event):
-        self.selected = event.widget
-        widget = event.widget
-        widget._drag_start_x = event.x
-        widget._drag_start_y = event.y
-        print("yeee")
-
-    def on_drag_start(self, event):
-        self.selected = event.widget
-        widget = event.widget
-        widget._drag_start_x = event.x
-        widget._drag_start_y = event.y
-
-    def on_drag_motion(self, event):
-        self.selected = event.widget
-        widget = event.widget
-        x = widget.winfo_x() - widget._drag_start_x + event.x
-        y = widget.winfo_y() - widget._drag_start_y + event.y
-        widget.place(x=x, y=y)
-        
     def make(self, event, filename):
         self.floorplan.create_image(300,100,image=self.images[filename][1], tags=filename, anchor="n")
         self.floorplan.tag_bind(filename, '<ButtonPress-1>', lambda event, arg=filename: self.drag_start(event, arg))
@@ -490,8 +459,7 @@ class Dragger:
         self.floorplan.tag_bind(filename, '<ButtonPress-3>', lambda event, arg=filename: self.delete_canvas_item(event, arg))
  
     def delete_canvas_item(self, event, filename):
-        self.floorplan.delete(event.widget.find_withtag('current')[0])
-       
+       self.floorplan.delete(event.widget.find_withtag('current')[0])
     def drag_start(self, event, filename):
         """Begining drag of an object"""
         # # record the item and its location
@@ -505,6 +473,7 @@ class Dragger:
         self._drag_data["item"] = None
         self._drag_data["x"] = 0
         self._drag_data["y"] = 0
+        
 
     def drag(self, event):
         """Handle dragging of an object"""
@@ -517,6 +486,7 @@ class Dragger:
         # record the new position
         self._drag_data["x"] = event.x
         self._drag_data["y"] = event.y
+
 
 class OpenFileScreen(tk.Frame):
     def __init__(self, parent, controller):
