@@ -52,6 +52,7 @@ class Controller:
         
         # Must change self.chosen_building to avoid attribute error later 
         # for new-file option.
+        # Make (Office Space Lease) variable for Site Construction
         self.view.projectInfo.config(text="Building No. ID: " + self.chosen_building \
                                      + "(Office Space Lease)", foreground="black")
         self.values_loaded = True
