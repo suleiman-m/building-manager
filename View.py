@@ -3,9 +3,14 @@ from tkinter.ttk import *
 import tkinter as tk
 import tkinter.font as font
 from tkinter import messagebox
+import tkinter.ttk as ttk
 
 from ModelObjects import *
 from Controller import *
+from PIL import ImageTk, Image
+import os
+
+background="#F1FBF7"
 
 ''' The visual interface for the application.'''
 class View():
@@ -23,7 +28,7 @@ class View():
         self.menubar.add_cascade(label="File", underline=0, menu=fileMenu)
         self.menubar.add_cascade(label="Help", underline=0, menu=helpMenu)
         
-        fileMenu.add_command(label="New File", underline=1, command=lambda: self.new_file("menu button"))
+        fileMenu.add_command(label="New File", underline=1, command=lambda: self.new_file())
         fileMenu.add_command(label="Open File", underline=2, command=lambda: self.open_file("menu button", 0))
         fileMenu.add_command(label="Save", underline=3, command=lambda: self.save_file("save"))
         fileMenu.add_command(label="Save As", underline=4, command=lambda: self.save_file("saveas"))
@@ -35,9 +40,9 @@ class View():
         
         # Styling and Tkinter macOS bug adjustments
         self.font = "Roboto"
-        self.background="#F1FBF7"
+  
         self.root.option_add('*tearOff', FALSE)
-        self.root.configure(width="640", height="480", background=self.background)
+        self.root.configure(width="640", height="480", background=background)
         style = Style()
         style.theme_use('classic') 
         style.configure("TButton", highlightcolor="#216657", \
@@ -50,9 +55,9 @@ class View():
         self.main_frame.grid_rowconfigure(0, weight=1)
         self.main_frame.grid_columnconfigure(0, weight=1)
         
-        self.projectInfo = tk.Label(self.root, text="Building No. ID:  0 (No File Loaded)", \
+        self.projectInfo = tk.Label(self.root, text="Building No. ID:  0 (No File Loaded)", background=background, \
                                     font=(self.font, 12), anchor=W)
-        self.projectInfo.pack(side="bottom", anchor="w")
+        self.projectInfo.pack(side="bottom", anchor="w", pady=(0,20))
         
         # Initializing the four main frames here.
         self.frames = {}
@@ -169,6 +174,8 @@ class View():
 class HomePage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, width="640", height="480")
+        
+        self.config(background=background)
         self.controller = controller
 
         self.title= Label(self, text="Building Planner", width="55", \
@@ -188,57 +195,35 @@ class HomePage(tk.Frame):
         self.MF_btn.grid(row=1, column=1, sticky="we")
         self.VCB_btn.grid(row=1, column=2, sticky="we")
         
-        # Blank Row 1 
-        # (filler space)
-        self.br1 = Label(self, text=" ", background="white", \
-                         font=(controller.font, 100))
-        self.br1.grid(row=2, column=1)
-        
-        self.welcome = Label(self, text="Welcome to Building Manager v1.0!", 
-                             background="light gray", foreground="black",\
-                             font=(controller.font, 12), anchor=CENTER)
-        
-        self.welcome2 = Label(self, text="Here, you can register a building or office", \
-                              background="light gray", foreground="black",\
-                              font=(controller.font, 12), anchor=W)
-        
-        self.welcome3 = Label(self, text="lease to modify and manage workspaces, ", \
-                             background="light gray", foreground="black",\
-                             font=(controller.font, 12), anchor=W)  
-        
-        self.welcome4 = Label(self, text="floor-plans, blueprints, HVAC, furnishing, ", \
-                              background="light gray", foreground="black",\
-                              font=(controller.font, 12), anchor=W)
-        
-        self.welcome5 = Label(self, text="and story/room costs.", \
-                              background="light gray", foreground="black",\
-                              font=(controller.font, 12), anchor=W)                              
+        # Set up logo
+        image = Image.open("building-icon.png")
+        image = image.resize((200, 150), Image.ANTIALIAS)
+        self.photo = ImageTk.PhotoImage(image)
+        self.logo = Label(self, text="Logo", image=self.photo, background=background)
+        self.logo.grid(row=2, column=0, sticky="NSEW", pady=(75,75), padx=(10,0))
+     
+        self.welcome = Label(self, text="\nWelcome to Building Manager v1.0!" +
+        "\nHere, you can register a building or office lease to modify and manage workspaces, " +
+        " floor-plans, blueprints, HVAC, furnishing and story/room costs.\n", 
+            background=background #"#39A78E"
+            , font=(controller.font, 14), 
+            anchor=CENTER, wraplength=500, borderwidth=2, relief="solid", padding=0)
+        self.welcome.grid(row=2, column=1, sticky="ew", columnspan=2, padx=(0,0))  
 
-        self.welcome.grid(row=4, column=1, sticky="we")   
-        self.welcome2.grid(row=5, column=1, sticky="we")
-        self.welcome3.grid(row=6, column=1, sticky="we")
-        self.welcome4.grid(row=7, column=1, sticky="we")
-        self.welcome5.grid(row=8, column=1, sticky="we")
-        
-        # Blank Row 2
-        self.br2 = Label(self, text=" ", background="white", \
-                         font=(controller.font, 100))
-        self.br2.grid(row=9, column=0)    
-        
-        self.getStarted = Label(self, text="Get Started: ", background="white", \
-                                foreground="blue", font=(controller.font, 20))
-        self.getStarted.grid(row=10, column=0, sticky="we")
+
+        self.getStarted = Label(self, text="Get Started: ", background=background, \
+                                foreground="#39A78E", font=(controller.font, 20))
+        self.getStarted.grid(row=3, column=0, sticky="we",padx=(10,0))
         
         self.gsMessage = Label(self, text="Create a new file or load a pre-existing one using the File menu in the top left of your screen.", \
-                               foreground="black", font=(controller.font, 12), \
-                               background="white")
-        self.gsMessage.grid(row=11, column=0, columnspan=3, sticky="we")
+            foreground="black", font=(controller.font, 12), background=background)
+        self.gsMessage.grid(row=4, column=0, columnspan=3, sticky="we", padx=(10,0)  )
         
         return     
 
 class ManageBuildingScreen(tk.Frame):
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent, width="640", height="480")
+        tk.Frame.__init__(self, parent, width="640", height="480", background=background)
         self.controller = controller 
         
         self.title= Label(self, text="Building Manager", \
@@ -259,70 +244,65 @@ class ManageBuildingScreen(tk.Frame):
         self.MF_btn.grid(row=1, column=1, sticky="we")
         self.VCB_btn.grid(row=1, column=2, sticky="we") 
         
-        #Blank Row 1
-        self.br1 = Label(self, text=" ", background="white", \
-                         font=(controller.font, 100))
-        self.br1.grid(row=9, column=0)          
-        
-        self.address = Label(self, text="Address: ", background="white", \
-                         font=(controller.font, 15), anchor=E, foreground="blue")
-        self.address.grid(row=2, column=0, sticky="we")  
-        self.addressField = Entry(self, foreground="black")
+        self.address = Label(self, text="Address: ", background=background, 
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
+        self.address.grid(row=2, column=0, sticky="we", pady=(25,0))  
+        self.addressField = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
         self.addressField.insert(0, "1055-A Forestwood Drive")
-        self.addressField.config(state=DISABLED)
-        self.addressField.grid(row=2, column=1, sticky="we")
+        self.addressField.config(state=DISABLED, disabledbackground=background)
+        self.addressField.grid(row=2, column=1, sticky="we",  pady=(25,0))
         
-        self.region = Label(self, text="Region: ", background="white", \
-                         font=(controller.font, 15), anchor=E, foreground="blue")
+        self.region = Label(self, text="Region: ", background=background, 
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
         self.region.grid(row=3, column=0, sticky="we")  
-        self.regionField = Entry(self, foreground="black")
+        self.regionField = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
         self.regionField.insert(0, "Missisauga, ON, Canada")
-        self.regionField.config(state=DISABLED)
+        self.regionField.config(state=DISABLED, disabledbackground=background)
         self.regionField.grid(row=3, column=1, sticky="we")
         
-        self.postalCode = Label(self, text="Postal Code: ", background="white", \
-                         font=(controller.font, 15), anchor=E, foreground="blue")
+        self.postalCode = Label(self, text="Postal Code: ", background=background, 
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
         self.postalCode.grid(row=4, column=0, sticky="we")  
-        self.postalCode = Entry(self, foreground="black")
+        self.postalCode = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
         self.postalCode.insert(0, "L5C 1T6")
-        self.postalCode.config(state=DISABLED)
+        self.postalCode.config(state=DISABLED, disabledbackground=background)
         self.postalCode.grid(row=4, column=1, sticky="we")  
         
-        self.totalStories = Label(self, text="Building Details: ", background="white", \
-                         font=(controller.font, 15), anchor=E, foreground="blue")
+        self.totalStories = Label(self, text="Building Details: ", background=background, 
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
         self.totalStories.grid(row=5, column=0, sticky="we")  
-        self.totalStories = Entry(self, foreground="black")
+        self.totalStories = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
         self.totalStories.insert(0, "Stories: 8 | Modifiable Floors: 7")
-        self.totalStories.config(state=DISABLED)
+        self.totalStories.config(state=DISABLED, disabledbackground=background)
         self.totalStories.grid(row=5, column=1, sticky="we")
         
-        self.totalCost = Label(self, text="Total Construction Cost: ", background="white", \
-                         font=(controller.font, 15), anchor=E, foreground="red")
+        self.totalCost = Label(self, text="Total Construction Cost: ", background=background, 
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
         self.totalCost.grid(row=6, column=0, sticky="we")  
-        self.totalCost = Entry(self, foreground="red")
+        self.totalCost = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
         self.totalCost.insert(0, "$15, 647.97 CAD")
-        self.totalCost.config(state=DISABLED)
+        self.totalCost.config(state=DISABLED, disabledbackground=background, disabledforeground="red")
         self.totalCost.grid(row=6, column=1, sticky="we")         
         
         self.addFloor = Button(self, text="Add Floor", command=lambda: self.controller.model.b1.mod_story("add"))
-        self.addFloor.grid(row=7, column=2, sticky="we")
+        self.addFloor.grid(row=7, column=1, sticky="we", padx=10, pady=(25,0))
         
         self.removeFloor = Button(self, text="Remove Floor", command=lambda: self.controller.model.b1.mod_story("del"))
-        self.removeFloor.grid(row=8, column=2, sticky="we")
+        self.removeFloor.grid(row=7, column=2, sticky="we", padx=10, pady=(25,0))
     
         return    
 
 class ManageFloorScreen(tk.Frame):
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent, width="640", height="480")
+        tk.Frame.__init__(self, parent, width="640", height="480", background=background)
         self.controller = controller
         
-        self.title= Label(self, text="Floor Manager", width="56",
+        self.title= Label(self, text="Floor Manager", width="55",
                          foreground="white", background="#39A78E", \
                          font=(controller.font, 20), anchor=CENTER)        
         
-        #self.title.grid(row=0, column=0, columnspan=3, sticky="we")
-        self.title.place(relx=0.5, rely=0.0250, anchor=CENTER, height=30)
+        self.title.grid(row=0, column=0, columnspan=3, sticky="we")
+        #self.title.place(relx=0.5, rely=0.0250, anchor=CENTER, height=30)
         
         self.HP_btn = Button(self, text="Home Page", 
            style="TButton", command=lambda: controller.choose_frame("HP"))        
@@ -331,21 +311,81 @@ class ManageFloorScreen(tk.Frame):
            width="21")
         self.VCB_btn = Button(self, text="View Current Blueprint", 
            style="TButton", command=lambda: controller.choose_frame("VCB"), \
-           width="23")  
-        
-        #self.HP_btn.grid(row=1, column=0, sticky="we")
-        #self.MB_btn.grid(row=1, column=1, sticky="we")
-        #self.VCB_btn.grid(row=1, column=2, sticky="we") 
-        
-        self.HP_btn.place(x=0, y=27)
-        self.MB_btn.place(x=230, y=27)
-        self.VCB_btn.place(x=470, y=27)         
+           width="23") 
     
-        return    
+        
+        self.HP_btn.grid(row=1, column=0, sticky="we")
+        self.MB_btn.grid(row=1, column=1, sticky="we")
+        self.VCB_btn.grid(row=1, column=2, sticky="we") 
+            
+        self.roomNum = Label(self, text="Room Number: ", background=background, 
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")  
+        self.roomNumField = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
+        self.roomNum.grid(row=2, column=0, sticky="we", pady=(25,0))
+        self.roomNumField.grid(row=2, column=1,  sticky="we", pady=(25,0))
+        
+        
+        self.roomType = Label(self, text="Room Type: ", background=background, 
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")  
+        self.roomTypeField = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
+        self.roomType.grid(row=3, column=0, sticky="we")  
+        self.roomTypeField.grid(row=3, column=1, sticky="we")
+        
+        self.size = Label(self, text="Square Footage: ", background=background, \
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
+        self.size.grid(row=4, column=0, sticky="we")  
+        self.sizeField = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
+        self.sizeField.grid(row=4, column=1, sticky="we")
+        
+        self.location = Label(self, text="Location: ", background=background, \
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
+        self.location.grid(row=5, column=0, sticky="we")  
+        self.location = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
+        self.location.grid(row=5, column=1, sticky="we")  
+        
+        self.furnished = Label(self, text="Furnished: ", background=background, \
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
+        self.furnished.grid(row=6, column=0, sticky="we")  
+        self.furnishedYes = tk.Radiobutton(self,  text = "Yes", background=background,
+                    font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
+        self.furnishedYes.grid(row=6, column=1, sticky="w")
+        self.furnishedNo = tk.Radiobutton(self,  text = "No", background=background,
+                    font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
+        self.furnishedNo.grid(row=6, column=1, sticky="e")        
+             
+
+        self.addRoom = Button(self, text="Add Room", command=lambda: self.controller.model.b1.mod_room("add"))
+        self.addRoom.grid(row=7, column=1, sticky="we", padx=10, pady=(20,10))
+        
+        self.removeRoom = Button(self, text="Remove Room", command=lambda: self.controller.model.b1.mod_room("del"))
+        self.removeRoom.grid(row=7, column=2, sticky="we", padx=10, pady=(20,10))
+        
+        
+        self.tree = ttk.Treeview(self,
+                                 columns=('Room number','Room Type','Square Footage','Location'),show=["headings"])
+     
+        self.tree.heading('#1', text='Room Number')
+        self.tree.heading('#2', text='Room Type')
+        self.tree.heading('#3', text='Square Footage')
+        self.tree.heading('#4', text='Location')
+        
+        self.tree.column('#1', width="50")
+        self.tree.column('#2', width="50")
+        self.tree.column('#0', width="50")
+        self.tree.column('#3', width="50")
+        self.tree.column('#4', width="50")
+        self.tree.grid(row=9, columnspan=3, sticky='nsew')
+        self.treeview = self.tree   
+     
+        #self.HP_btn.place(x=0, y=27)
+        #self.MB_btn.place(x=230, y=27)
+        #self.VCB_btn.place(x=470, y=27)         
+    
+        return      
 
 class ViewBlueprintScreen(tk.Frame):
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent, width="640", height="480")
+        tk.Frame.__init__(self, parent, width="640", height="480", background=background)
         self.controller = controller
         
         self.title= Label(self, text="Floor-Plan Blueprint Viewer", width="55",\
@@ -364,8 +404,103 @@ class ViewBlueprintScreen(tk.Frame):
         self.HP_btn.grid(row=1, column=0, sticky="we")
         self.MB_btn.grid(row=1, column=1, sticky="we")
         self.MF_btn.grid(row=1, column=2, sticky="we")         
+        
+        self.dragger = Dragger()
+        
+        #Canvas for the floor plan stuff, scrollbar for the floor plan items
+        # self.canvas = tk.Canvas(self, width=750, height=500, background="white")
+        # self.canvas.grid(row=2, column=0, columnspan=3,sticky="nsw") 
+        # scroll_y = tk.Scrollbar(self, orient="vertical", command=  self.canvas.yview)
+        # scroll_y.grid(row=2, column=0, sticky="nse")
+        # self.canvas.configure(scrollregion=  self.canvas.bbox("all"))
+        # self.canvas.configure(yscrollcommand=scroll_y.set)
+
+
+#         directory = 'images'
+
+#         def onObjectClick(event, filename): 
+            
+#             index = 0                 
+#             for name in self.filenames:
+#                 if filename == name: 
     
+#                     self.object = Label(self, text=filename, image=self.photos[index], background=background)
+#                     dragger.make_draggable(self.object)                 
+#                     self.objects[filename] = self.object
+
+#                     self.objects[filename].grid(row=2,column=2)    
+#                     print(filename)
+                    
+#                 index +=1
+#         self.rotation = 0
+#         def createItems():
+#             canvas.delete("all")
+#             self.objects = {}
+#             self.filenames =[]
+#             self.photos = []
+            
+#             x = 100
+#             y = 10
+#             canvas.create_rectangle(-20,0, 250, 2500, fill="#a7d8b8")
+#             for filename in os.listdir(directory):
+#                 self.filenames.append(filename)
+#                 self.image = Image.open("images/" + filename)
+#                 self.images.append(self.image)
+        
+
+#                 self.photo = ImageTk.PhotoImage(self.image)
+#                 self.photos.append(self.photo)
+#                 canvas.create_image(x,y,image=self.photo, tags=filename, anchor="n")
+#                 canvas.tag_bind(filename, '<ButtonPress-1>', lambda event, arg=filename: onObjectClick(event, arg))
+#                 y+=(self.photo.height() +30)
+#             canvas.configure(scrollregion=canvas.bbox("all"))
+#         createItems()
+#         self.rotation = 0
+#         def rotate():
+#             index = 0
+#             for image in self.images:
+#                 image = image.transpose(Image.ROTATE_90)
+#                 image.save("images/" + self.filenames[index])
+
+#             canvas.update_idletasks
+#         rotateBTN = Button(self, text="Rotate", command=rotate)
+#         rotateBTN.grid(row=3, column=2)
+
+# # image = image.transpose(Image.ROTATE_90)
         return 
+class Dragger:
+    def __init__(self):
+        self.selected = None
+
+    def make_draggable(self, widget):
+
+            widget.bind("<Button-1>", self.on_drag_start)
+            widget.bind("<B1-Motion>", self.on_drag_motion)
+            widget.bind("<Delete>", self.rotate)
+
+
+    def rotate(self, event):
+        self.selected = event.widget
+        widget = event.widget
+        widget._drag_start_x = event.x
+        widget._drag_start_y = event.y
+        print("yeee")
+            
+
+
+    def on_drag_start(self, event):
+        self.selected = event.widget
+        widget = event.widget
+        widget._drag_start_x = event.x
+        widget._drag_start_y = event.y
+
+
+    def on_drag_motion(self, event):
+        self.selected = event.widget
+        widget = event.widget
+        x = widget.winfo_x() - widget._drag_start_x + event.x
+        y = widget.winfo_y() - widget._drag_start_y + event.y
+        widget.place(x=x, y=y)
 
 class OpenFileScreen(tk.Frame):
     def __init__(self, parent, controller):
@@ -381,16 +516,12 @@ class OpenFileScreen(tk.Frame):
            style="TButton", command=lambda: controller.choose_frame("HP"))        
         self.HP_btn.grid(row=1, column=0, columnspan=3, sticky="we")
         
-        #Blank Row 1
-        self.br1 = Label(self, text=" ", background="white", \
-                         font=(controller.font, 100))
-        self.br1.grid(row=2, column=0)         
-        
         valBuildNum = (self.register(self.is_Num), "%S")
         self.enterNum = Label(self, text="Enter Building ID No. Here: ", anchor=W)
         self.enterNum.grid(row=3, column=0, sticky="we")
         
-        self.numForm = Entry(self, validate="key", validatecommand=valBuildNum)
+        self.numForm = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
+        self.numForm.config(validate="key", validatecommand=valBuildNum)
         self.numForm.grid(row=3, column=1, sticky="we")
         
         self.accept_btn = Button(self, text="Accept", style="TButton", command=self.submit)
@@ -409,3 +540,5 @@ class OpenFileScreen(tk.Frame):
             controller.open_file("submit button", self.numForm.get())
         
         return
+
+
