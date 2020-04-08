@@ -47,7 +47,7 @@ class View():
         style.theme_use('classic') 
         style.configure("TButton", highlightcolor="#216657", \
                         background="#39A78E", foreground="white", \
-                        relief="flat", font=(self.font, 15), width=20)        
+                        relief="flat", font=(self.font, 15), width=25)        
         
         # Container window.
         self.main_frame = tk.Frame(self.root, width="640", height="480")
@@ -187,7 +187,7 @@ class HomePage(tk.Frame):
         self.VCB_btn = Button(self, text="Visual Planner", 
            style="TButton", command=lambda: controller.choose_frame("VCB"))
 
-        self.title.grid(row=0, column=0, columnspan=3)
+        self.title.grid(row=0, column=0, columnspan=3, sticky="we")
 
         self.MB_btn.grid(row=1, column=0, sticky="we")
         self.MF_btn.grid(row=1, column=1, sticky="we")
@@ -198,23 +198,23 @@ class HomePage(tk.Frame):
         image = image.resize((200, 150), Image.ANTIALIAS)
         self.photo = ImageTk.PhotoImage(image)
         self.logo = Label(self, text="Logo", image=self.photo, background=background)
-        self.logo.grid(row=2, column=0, sticky="NSEW", pady=(75,75), padx=(10,0))
+        self.logo.grid(row=2, column=0, sticky="NSEW", pady=(75,75), padx=(25,0))
      
-        self.welcome = Label(self, text="\nWelcome to Building Manager v1.0!" +
-        "\nHere, you can register a building or office lease to modify and manage workspaces, " +
-        " floor-plans, blueprints, HVAC, furnishing and story/room costs.\n", 
+        self.welcome = Label(self, text="\nWelcome to Building Manager v1.0!\n" +
+        "\nHere, you can register a building or office to modify and manage workspaces." +
+        "There is support for floor-plans, HVAC, furnishing and story/room costs.\n", 
             background=background #"#39A78E"
-            , font=(controller.font, 14), 
-            anchor=CENTER, wraplength=500, borderwidth=2, relief="solid", padding=0)
-        self.welcome.grid(row=2, column=1, sticky="ew", columnspan=2, padx=(0,0))  
+            , font=(controller.font,14, "bold"), 
+            anchor=CENTER, wraplength=400, padding=0)
+        self.welcome.grid(row=2, column=1, sticky="ew", columnspan=2)  
 
         self.getStarted = Label(self, text="Get Started: ", background=background, \
                                 foreground="#39A78E", font=(controller.font, 20))
-        self.getStarted.grid(row=3, column=0, sticky="we",padx=(10,0))
+        self.getStarted.grid(row=3, column=0, sticky="we")
         
         self.gsMessage = Label(self, text="Create a new file or load a pre-existing one using the File menu in the top left of your screen.", \
             foreground="black", font=(controller.font, 12), background=background)
-        self.gsMessage.grid(row=4, column=0, columnspan=3, sticky="we", padx=(10,0)  )
+        self.gsMessage.grid(row=4, column=0, columnspan=3, sticky="we")
         
         return     
 
@@ -228,13 +228,13 @@ class ManageBuildingScreen(tk.Frame):
                          font=(controller.font, 20), anchor=CENTER)        
         
         self.title.grid(row=0, column=0, columnspan=3, sticky="we")
-        #self.title.place(relx=0.5, rely=0.0250, anchor=CENTER)
+        # self.title.place(relx=0.5, rely=0.0250, anchor=CENTER)
         
         self.HP_btn = Button(self, text="Home Page", 
            style="TButton", command=lambda: controller.choose_frame("HP"))        
         self.MF_btn = Button(self, text="Manage Floors", 
            style="TButton", command=lambda: controller.choose_frame("MF"))
-        self.VCB_btn = Button(self, text="View Current Blueprint", 
+        self.VCB_btn = Button(self, text="View Blueprint", 
            style="TButton", command=lambda: controller.choose_frame("VCB"))  
         
         self.HP_btn.grid(row=1, column=0, sticky="we")
@@ -282,10 +282,10 @@ class ManageBuildingScreen(tk.Frame):
         self.totalCost.grid(row=6, column=1, sticky="we")         
         
         self.addFloor = Button(self, text="Add Floor", command=lambda: controller.controller.model.currBuild.mod_story("add"))
-        self.addFloor.grid(row=7, column=1, sticky="we", padx=10, pady=(25,0))
+        self.addFloor.grid(row=7, column=1, sticky="we", pady=(25,0))
         
         self.removeFloor = Button(self, text="Remove Floor", command=lambda: controller.controller.model.currBuild.mod_story("del"))
-        self.removeFloor.grid(row=7, column=2, sticky="we", padx=10, pady=(25,0))
+        self.removeFloor.grid(row=7, column=2, sticky="we", pady=(25,0))
     
         return    
 
@@ -304,11 +304,9 @@ class ManageFloorScreen(tk.Frame):
         self.HP_btn = Button(self, text="Home Page", 
            style="TButton", command=lambda: controller.choose_frame("HP"))        
         self.MB_btn = Button(self, text="Manage Building", 
-           style="TButton", command=lambda: controller.choose_frame("MB"), \
-           width="21")
-        self.VCB_btn = Button(self, text="View Current Blueprint", 
-           style="TButton", command=lambda: controller.choose_frame("VCB"), \
-           width="23") 
+           style="TButton", command=lambda: controller.choose_frame("MB"))
+        self.VCB_btn = Button(self, text="View Blueprint", 
+           style="TButton", command=lambda: controller.choose_frame("VCB")) 
     
         
         self.HP_btn.grid(row=1, column=0, sticky="we")
@@ -343,36 +341,36 @@ class ManageFloorScreen(tk.Frame):
         self.furnished = Label(self, text="Furnished: ", background=background, \
                          font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
         self.furnished.grid(row=6, column=0, sticky="we")  
-        self.furnished = tk.Radiobutton(self,  text = "Yes", background=background,
+        self.furnishedYes = tk.Radiobutton(self,  text = "Yes", background=background, value=True,
                     font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
-        self.furnished.grid(row=6, column=1, sticky="w")
-        self.furnished = tk.Radiobutton(self,  text = "No", background=background,
+        self.furnishedYes.grid(row=6, column=1, sticky="w")
+        self.furnishedNo = tk.Radiobutton(self,  text = "No", background=background, value=False,
                     font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
-        self.furnished.grid(row=6, column=1, sticky="e")        
+        self.furnishedNo.grid(row=6, column=1, sticky="e")        
              
 
         self.addRoom = Button(self, text="Add Room", command=lambda: controller.controller.model.currBuild.mod_room("add"))
-        self.addRoom.grid(row=7, column=1, sticky="we", padx=10, pady=(20,10))
+        self.addRoom.grid(row=7, column=1, sticky="we", pady=(20,10))
         
         self.removeRoom = Button(self, text="Remove Room", command=lambda: controller.controller.model.currBuild.mod_room("del"))
-        self.removeRoom.grid(row=7, column=2, sticky="we", padx=10, pady=(20,10))
+        self.removeRoom.grid(row=7, column=2, sticky="w", pady=(20,10))
         
         
-        self.tree = ttk.Treeview(self,
-                                 columns=('Room number','Room Type','Square Footage','Location'),show=["headings"])
+        # self.tree = ttk.Treeview(self,
+        #                          columns=('Room number','Room Type','Square Footage','Location'),show=["headings"])
      
-        self.tree.heading('#1', text='Room Number')
-        self.tree.heading('#2', text='Room Type')
-        self.tree.heading('#3', text='Square Footage')
-        self.tree.heading('#4', text='Location')
+        # self.tree.heading('#1', text='Room Number')
+        # self.tree.heading('#2', text='Room Type')
+        # self.tree.heading('#3', text='Square Footage')
+        # self.tree.heading('#4', text='Location')
         
-        self.tree.column('#1', width="50")
-        self.tree.column('#2', width="50")
-        self.tree.column('#0', width="50")
-        self.tree.column('#3', width="50")
-        self.tree.column('#4', width="50")
-        self.tree.grid(row=9, columnspan=3, sticky='nsew')
-        self.treeview = self.tree   
+        # self.tree.column('#1', width="")
+        # self.tree.column('#2', width="50")
+        # self.tree.column('#0', width="50")
+        # self.tree.column('#3', width="50")
+        # self.tree.column('#4', width="50")
+        # self.tree.grid(row=9, columnspan=3, sticky='nsew')
+        # self.treeview = self.tree   
      
         #self.HP_btn.place(x=0, y=27)
         #self.MB_btn.place(x=230, y=27)
@@ -388,9 +386,9 @@ class ViewBlueprintScreen(tk.Frame):
         self._drag_data = {"x": 0, "y": 0, "item": None}
         self.title= Label(self, text="Visual Floor Planner", width="55",\
                          foreground="white", background="#39A78E", \
-                         font=(controller.font, 20), anchor="center")        
+                         font=(controller.font, 20), anchor=CENTER)        
         
-        self.title.grid(row=0, column=0, columnspan=3)
+        self.title.grid(row=0, column=0, columnspan=3, sticky="we")
         
         self.HP_btn = Button(self, text="Home Page", 
            style="TButton", command=lambda: controller.choose_frame("HP"))        
@@ -409,7 +407,7 @@ class ViewBlueprintScreen(tk.Frame):
         self.item_label.grid(row=2, column=0)
         self.floorplan_label = Label(self, text="Floor-Plan Canvas", \
                          foreground="black", background=background, \
-                         font=(controller.font, 20), anchor="e")  
+                         font=(controller.font, 20))  
         self.floorplan_label.grid(row=2, column=1, columnspan=2)
         
         #Canvas for the floor plan stuff, scrollbar for the floor plan items
@@ -495,8 +493,8 @@ class OpenFileScreen(tk.Frame):
         
         self.title= Label(self, text="Open File", width="55",\
                          foreground="white", background="#39A78E", \
-                         font=(controller.font, 20), anchor="center")        
-        self.title.grid(row=0, column=0, columnspan=3)
+                         font=(controller.font, 20), anchor=CENTER)        
+        self.title.grid(row=0, column=0, columnspan=3, sticky="we")
         
         self.HP_btn = Button(self, text="Back to Home Page", 
            style="TButton", command=lambda: controller.choose_frame("HP"))        
