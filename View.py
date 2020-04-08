@@ -186,7 +186,7 @@ class HomePage(tk.Frame):
            style="TButton", command=lambda: controller.choose_frame("MB"))
         self.MF_btn = Button(self, text="Manage Floors", 
            style="TButton", command=lambda: controller.choose_frame("MF"))
-        self.VCB_btn = Button(self, text="View Current Blueprint", 
+        self.VCB_btn = Button(self, text="Visual Planner", 
            style="TButton", command=lambda: controller.choose_frame("VCB"))
 
         self.title.grid(row=0, column=0, columnspan=3)
@@ -346,12 +346,12 @@ class ManageFloorScreen(tk.Frame):
         self.furnished = Label(self, text="Furnished: ", background=background, \
                          font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
         self.furnished.grid(row=6, column=0, sticky="we")  
-        self.furnishedYes = tk.Radiobutton(self,  text = "Yes", background=background,
+        self.furnished = tk.Radiobutton(self,  text = "Yes", background=background,
                     font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
-        self.furnishedYes.grid(row=6, column=1, sticky="w")
-        self.furnishedNo = tk.Radiobutton(self,  text = "No", background=background,
+        self.furnished.grid(row=6, column=1, sticky="w")
+        self.furnished = tk.Radiobutton(self,  text = "No", background=background,
                     font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
-        self.furnishedNo.grid(row=6, column=1, sticky="e")        
+        self.furnished.grid(row=6, column=1, sticky="e")        
              
 
         self.addRoom = Button(self, text="Add Room", command=lambda: self.controller.model.b1.mod_room("add"))
@@ -389,7 +389,7 @@ class ViewBlueprintScreen(tk.Frame):
         self.controller = controller
         self.dragInfo ={}
         self._drag_data = {"x": 0, "y": 0, "item": None}
-        self.title= Label(self, text="Floor-Plan Blueprint Viewer", width="55",\
+        self.title= Label(self, text="Visual Floor Planner", width="55",\
                          foreground="white", background="#39A78E", \
                          font=(controller.font, 20), anchor="center")        
         
@@ -406,22 +406,29 @@ class ViewBlueprintScreen(tk.Frame):
         self.MB_btn.grid(row=1, column=1, sticky="we")
         self.MF_btn.grid(row=1, column=2, sticky="we")         
         
+        self.item_label = Label(self, text="Floor-Plan Objects", \
+                         foreground="black", background=background, \
+                         font=(controller.font, 20), anchor="w")  
+        self.item_label.grid(row=2, column=0)
+        self.floorplan_label = Label(self, text="Floor-Plan Canvas", \
+                         foreground="black", background=background, \
+                         font=(controller.font, 20), anchor="e")  
+        self.floorplan_label.grid(row=2, column=1, columnspan=2)
+        
         #Canvas for the floor plan stuff, scrollbar for the floor plan items
         self.floorplan = tk.Canvas(self, width=360, height=500, background="#a7d8b8")
-        self.canvas = tk.Canvas(self, width=100, height=500, background="#a7d8b8")
-        self.canvas.grid(row=2, column=0, sticky="nsew") 
-        self.floorplan.grid(row=2, column=1, columnspan=3, sticky="nsew" )
+        self.item_canvas = tk.Canvas(self, width=100, height=500, background="#a7d8b8")
+        self.item_canvas.grid(row=3, column=0, sticky="nsew") 
+        self.floorplan.grid(row=3, column=1, columnspan=3, sticky="nsew" )
 
-        scroll_y = tk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
-        scroll_y.grid(row=2, column=0, sticky="nse")
-        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
-        self.canvas.configure(yscrollcommand=scroll_y.set)
+        scroll_y = tk.Scrollbar(self, orient="vertical", command=self.item_canvas.yview)
+        scroll_y.grid(row=3, column=0, sticky="nse")
+        self.item_canvas.configure(scrollregion=self.item_canvas.bbox("all"))
+        self.item_canvas.configure(yscrollcommand=scroll_y.set)
 
         directory = 'images'
         self.draggers = []
         self.images = {} # Key: filename of image, Value: (Image, ImageTk.PhotoImage)
-        self.thumbs = {} # Key: filename of image, Value: (Image, ImageTk.PhotoImage)
-
         y = 0
         for filename in os.listdir(directory):       
 
@@ -429,15 +436,21 @@ class ViewBlueprintScreen(tk.Frame):
             self.photo = ImageTk.PhotoImage(self.image)
             self.images[filename] = (self.image, self.photo)
             
-            self.canvas.create_image(100, y, image=self.photo, tags=filename+"orig")
-            self.canvas.tag_bind(filename +"orig", '<ButtonPress-1>', lambda event, arg=filename: self.make(event, arg))
+            self.item_canvas.create_image(100, y, image=self.photo, tags=filename+"orig")
+            self.item_canvas.tag_bind(filename +"orig", '<ButtonPress-1>', lambda event, arg=filename: self.make(event, arg))
 
             
             y+=(self.photo.height() + 50)
+        self.item_canvas.configure(scrollregion=self.item_canvas.bbox("all"))
 
-        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
-
-    
+        self.hints = Label(self, text=
+            "This screen is used to design potential layouts.\n"+
+            "Click an object to add it to the floor plan. " +
+            "Drag the object with the LEFT mouse button. "+
+            "\nMouse over an object and RIGHT-CLICK to delete it." , \
+                         foreground="black", background=background, \
+                         font=(controller.font, 11, 'bold'), anchor="e")  
+        self.hints.grid(row=4, column=0, columnspan=3)
 
         return 
     def make(self, event, filename):
