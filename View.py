@@ -458,7 +458,7 @@ class ViewBlueprintScreen(tk.Frame):
         self.draggers = []
         self.images = {} # Key: filename of image, Value: (Image, ImageTk.PhotoImage)
         y = 0
-        for filename in os.listdir(directory):       
+        for filename in sorted(os.listdir(directory)):       
 
             self.image = Image.open("images/" + filename) 
             self.photo = ImageTk.PhotoImage(self.image)
