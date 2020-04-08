@@ -32,6 +32,7 @@ class Controller:
         # Initial launch no building file is loaded (frames locked).
         self.values_loaded = False
         # File not yet saved on first launch.
+        self.building_details =[]
         self.savestatus = 0
         # Placeholder. Updated in csave_file().
         self.savetime = datetime.now().strftime("%H:%M:%S")

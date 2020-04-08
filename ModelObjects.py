@@ -6,15 +6,16 @@ import string
 
 class Building:
 
-    def __init__(self):
+    def __init__(self, address, region, postalCode):
         self.stories = []
-        self.address = ""
-        self.region = ""
-        self.postalCode = ""
+        self.address = address
+        self.region = region
+        self.postalCode = postalCode
         self.total_floors = len(self.stories)
         self.total_cost = ""
         self.modifiable_floors = 0
         self.current_floors_modified = 0
+        print("Created new building with address ", self.address)
 
     def mod_story(self, story, mode):
         if (mode == "add"):
@@ -103,7 +104,9 @@ class Model:
             #         Set the Building and Story attributes appropriately.
             # DO NOT modify buildings.csv with new building entry. This will be
             # done at save time (in case user decides not to save).
-            pass
+            info = self.controller.building_details
+            self.building = Building(info[0], info[1], info[2])
+
         elif (mode == "open file"):
             # See Controller.py -> csavefile() for filename formats.
             # Assumes user entered valid number.

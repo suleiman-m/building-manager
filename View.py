@@ -28,7 +28,7 @@ class View():
         self.menubar.add_cascade(label="File", underline=0, menu=fileMenu)
         self.menubar.add_cascade(label="Help", underline=0, menu=helpMenu)
         
-        fileMenu.add_command(label="New File", underline=1, command=lambda: self.new_file())
+
         fileMenu.add_command(label="Open File", underline=2, command=lambda: self.open_file("menu button", 0))
         fileMenu.add_command(label="Save", underline=3, command=lambda: self.save_file("save"))
         fileMenu.add_command(label="Save As", underline=4, command=lambda: self.save_file("saveas"))
@@ -57,30 +57,30 @@ class View():
         
         self.projectInfo = tk.Label(self.root, text="Building No. ID:  0 (No File Loaded)", background=background, \
                                     font=(self.font, 12), anchor=W)
-        self.projectInfo.pack(side="bottom", anchor="w", pady=(0,20))
+        self.projectInfo.pack(side="bottom", anchor="w", pady=(0,50))
         
         # Initializing the four main frames here.
         self.frames = {}
-        frame0 = HomePage(parent=self.main_frame, controller=self)
-        frame0.grid(row=0, column=0, sticky="nsew")
-        self.frames["Home Page"] = frame0
+        self.frame0 = HomePage(parent=self, controller=self)
+        self.frame0.grid(row=0, column=0, sticky="nsew")
+        self.frames["Home Page"] = self.frame0
         
-        frame1 = ManageBuildingScreen(parent=self.main_frame, controller=self)
-        frame1.grid(row=0, column=0, sticky="nsew")
-        self.frames["Building Manager"] = frame1
+        self.frame1 = ManageBuildingScreen(parent=self.main_frame, controller=self)
+        self.frame1.grid(row=0, column=0, sticky="nsew")
+        self.frames["Building Manager"] = self.frame1
         
-        frame2 = ManageFloorScreen(parent=self.main_frame, controller=self)
-        frame2.grid(row=0, column=0, sticky="nsew")
-        self.frames["Floor Manager"] = frame2
+        self.frame2 = ManageFloorScreen(parent=self.main_frame, controller=self)
+        self.frame2.grid(row=0, column=0, sticky="nsew")
+        self.frames["Floor Manager"] = self.frame2
         
-        frame3 = ViewBlueprintScreen(parent=self.main_frame, controller=self)
-        frame3.grid(row=0, column=0, sticky="nsew")
-        self.frames["Floor-Plan Blueprint Viewer"] = frame3
+        self.frame3 = ViewBlueprintScreen(parent=self.main_frame, controller=self)
+        self.frame3.grid(row=0, column=0, sticky="nsew")
+        self.frames["Floor-Plan Blueprint Viewer"] = self.frame3
         
         # Initializing helper frames here.
-        frame4 = OpenFileScreen(parent=self.main_frame, controller=self)
-        frame4.grid(row=0, column=0, sticky="nsew")
-        self.frames["Open File"] = frame4
+        self.frame4 = OpenFileScreen(parent=self.main_frame, controller=self)
+        self.frame4.grid(row=0, column=0, sticky="nsew")
+        self.frames["Open File"] = self.frame4
         
         self.goScreen("Home Page")
         
@@ -136,7 +136,11 @@ class View():
         return 
     
     def new_file(self):
-        self.new_building_details = []
+
+        address = self.frame0.addressField.get()
+        region = self.frame0.regionField.get()
+        postalCode = self.frame0.postalCodeEntry.get()
+        self.new_building_details = [address, region, postalCode]
         # Open pop-up form asking user to fill out and submit initial details.
         # Store info in self.new_building_details array.
         self.controller.set_up("new file")
@@ -171,8 +175,8 @@ class View():
     
 class HomePage(tk.Frame):
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent, width="640", height="480")
-        
+        tk.Frame.__init__(self, parent.main_frame, width="640", height="480")
+        self.parent = parent
         self.config(background=background)
         self.controller = controller
 
@@ -212,9 +216,38 @@ class HomePage(tk.Frame):
                                 foreground="#39A78E", font=(controller.font, 20))
         self.getStarted.grid(row=3, column=0, sticky="we")
         
-        self.gsMessage = Label(self, text="Create a new file or load a pre-existing one using the File menu in the top left of your screen.", \
+        self.gsMessage = Label(self, text="Create a new file below or load a pre-existing one using the File menu in the top left of your screen.", \
             foreground="black", font=(controller.font, 12), background=background)
-        self.gsMessage.grid(row=4, column=0, columnspan=3, sticky="we")
+        self.gsMessage.grid(row=4, column=0, columnspan=3, sticky="we", pady=(0,20))
+
+
+        self.newBuilding = Label(self, text="New Building ", background=background, \
+                                foreground="#39A78E", font=(controller.font, 20))
+        self.newBuilding.grid(row=5, column=0, sticky="we")
+
+        self.address = Label(self, text="Address: ", background=background, 
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
+        self.address.grid(row=6, column=0, sticky="we", pady=(25,0))  
+        self.addressField = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
+        self.addressField.grid(row=6, column=1, sticky="we",  pady=(25,0))
+        
+        self.region = Label(self, text="Region: ", background=background, 
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
+        self.region.grid(row=7, column=0, sticky="we")  
+        self.regionField = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
+        self.regionField.grid(row=7, column=1, sticky="we")
+        
+        self.postalCode = Label(self, text="Postal Code: ", background=background, 
+                         font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
+        self.postalCode.grid(row=8, column=0, sticky="we")  
+        self.postalCodeEntry = tk.Entry(self, background="white", font=(controller.font, 13), foreground="black")
+        self.postalCodeEntry.grid(row=8, column=1, sticky="we")  
+
+        self.newFileBTN  = Button(self, text="Create New File", 
+           style="TButton", command=self.parent.new_file)       
+       
+        self.newFileBTN.grid(row=9, column=1, sticky="we")
+
         
         return     
 
@@ -435,7 +468,7 @@ class ViewBlueprintScreen(tk.Frame):
             self.item_canvas.tag_bind(filename +"orig", '<ButtonPress-1>', lambda event, arg=filename: self.make(event, arg))
 
             
-            y+=(self.photo.height() + 50)
+            y+=((self.photo.height() + 75))
         self.item_canvas.configure(scrollregion=self.item_canvas.bbox("all"))
 
         self.hints = Label(self, text=
@@ -524,5 +557,4 @@ class OpenFileScreen(tk.Frame):
             controller.open_file("submit button", self.numForm.get())
         
         return
-
 
