@@ -184,7 +184,7 @@ class HomePage(tk.Frame):
            style="TButton", command=lambda: controller.choose_frame("MB"))
         self.MF_btn = Button(self, text="Manage Floors", 
            style="TButton", command=lambda: controller.choose_frame("MF"))
-        self.VCB_btn = Button(self, text="View Current Blueprint", 
+        self.VCB_btn = Button(self, text="Visual Planner", 
            style="TButton", command=lambda: controller.choose_frame("VCB"))
 
         self.title.grid(row=0, column=0, columnspan=3)
@@ -343,12 +343,12 @@ class ManageFloorScreen(tk.Frame):
         self.furnished = Label(self, text="Furnished: ", background=background, \
                          font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
         self.furnished.grid(row=6, column=0, sticky="we")  
-        self.furnishedYes = tk.Radiobutton(self,  text = "Yes", background=background,
+        self.furnished = tk.Radiobutton(self,  text = "Yes", background=background,
                     font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
-        self.furnishedYes.grid(row=6, column=1, sticky="w")
-        self.furnishedNo = tk.Radiobutton(self,  text = "No", background=background,
+        self.furnished.grid(row=6, column=1, sticky="w")
+        self.furnished = tk.Radiobutton(self,  text = "No", background=background,
                     font=(controller.font, 15), anchor=CENTER, foreground="#39A78E")
-        self.furnishedNo.grid(row=6, column=1, sticky="e")        
+        self.furnished.grid(row=6, column=1, sticky="e")        
              
 
         self.addRoom = Button(self, text="Add Room", command=lambda: controller.controller.model.currBuild.mod_room("add"))
@@ -384,8 +384,9 @@ class ViewBlueprintScreen(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, width="640", height="480", background=background)
         self.controller = controller
-        
-        self.title= Label(self, text="Floor-Plan Blueprint Viewer", width="55",\
+        self.dragInfo ={}
+        self._drag_data = {"x": 0, "y": 0, "item": None}
+        self.title= Label(self, text="Visual Floor Planner", width="55",\
                          foreground="white", background="#39A78E", \
                          font=(controller.font, 20), anchor="center")        
         
@@ -402,70 +403,53 @@ class ViewBlueprintScreen(tk.Frame):
         self.MB_btn.grid(row=1, column=1, sticky="we")
         self.MF_btn.grid(row=1, column=2, sticky="we")         
         
-        self.dragger = Dragger()
+        self.item_label = Label(self, text="Floor-Plan Objects", \
+                         foreground="black", background=background, \
+                         font=(controller.font, 20), anchor="w")  
+        self.item_label.grid(row=2, column=0)
+        self.floorplan_label = Label(self, text="Floor-Plan Canvas", \
+                         foreground="black", background=background, \
+                         font=(controller.font, 20), anchor="e")  
+        self.floorplan_label.grid(row=2, column=1, columnspan=2)
         
         #Canvas for the floor plan stuff, scrollbar for the floor plan items
-        # self.canvas = tk.Canvas(self, width=750, height=500, background="white")
-        # self.canvas.grid(row=2, column=0, columnspan=3,sticky="nsw") 
-        # scroll_y = tk.Scrollbar(self, orient="vertical", command=  self.canvas.yview)
-        # scroll_y.grid(row=2, column=0, sticky="nse")
-        # self.canvas.configure(scrollregion=  self.canvas.bbox("all"))
-        # self.canvas.configure(yscrollcommand=scroll_y.set)
+        self.floorplan = tk.Canvas(self, width=360, height=500, background="#a7d8b8")
+        self.item_canvas = tk.Canvas(self, width=100, height=500, background="#a7d8b8")
+        self.item_canvas.grid(row=3, column=0, sticky="nsew") 
+        self.floorplan.grid(row=3, column=1, columnspan=3, sticky="nsew" )
 
+        scroll_y = tk.Scrollbar(self, orient="vertical", command=self.item_canvas.yview)
+        scroll_y.grid(row=3, column=0, sticky="nse")
+        self.item_canvas.configure(scrollregion=self.item_canvas.bbox("all"))
+        self.item_canvas.configure(yscrollcommand=scroll_y.set)
 
-#         directory = 'images'
+        directory = 'images'
+        self.draggers = []
+        self.images = {} # Key: filename of image, Value: (Image, ImageTk.PhotoImage)
+        y = 0
+        for filename in os.listdir(directory):       
 
-#         def onObjectClick(event, filename): 
+            self.image = Image.open("images/" + filename) 
+            self.photo = ImageTk.PhotoImage(self.image)
+            self.images[filename] = (self.image, self.photo)
             
-#             index = 0                 
-#             for name in self.filenames:
-#                 if filename == name: 
-    
-#                     self.object = Label(self, text=filename, image=self.photos[index], background=background)
-#                     dragger.make_draggable(self.object)                 
-#                     self.objects[filename] = self.object
+            self.item_canvas.create_image(100, y, image=self.photo, tags=filename+"orig")
+            self.item_canvas.tag_bind(filename +"orig", '<ButtonPress-1>', lambda event, arg=filename: self.make(event, arg))
 
-#                     self.objects[filename].grid(row=2,column=2)    
-#                     print(filename)
-                    
-#                 index +=1
-#         self.rotation = 0
-#         def createItems():
-#             canvas.delete("all")
-#             self.objects = {}
-#             self.filenames =[]
-#             self.photos = []
             
-#             x = 100
-#             y = 10
-#             canvas.create_rectangle(-20,0, 250, 2500, fill="#a7d8b8")
-#             for filename in os.listdir(directory):
-#                 self.filenames.append(filename)
-#                 self.image = Image.open("images/" + filename)
-#                 self.images.append(self.image)
-        
+            y+=(self.photo.height() + 50)
+        self.item_canvas.configure(scrollregion=self.item_canvas.bbox("all"))
 
-#                 self.photo = ImageTk.PhotoImage(self.image)
-#                 self.photos.append(self.photo)
-#                 canvas.create_image(x,y,image=self.photo, tags=filename, anchor="n")
-#                 canvas.tag_bind(filename, '<ButtonPress-1>', lambda event, arg=filename: onObjectClick(event, arg))
-#                 y+=(self.photo.height() +30)
-#             canvas.configure(scrollregion=canvas.bbox("all"))
-#         createItems()
-#         self.rotation = 0
-#         def rotate():
-#             index = 0
-#             for image in self.images:
-#                 image = image.transpose(Image.ROTATE_90)
-#                 image.save("images/" + self.filenames[index])
+        self.hints = Label(self, text=
+            "This screen is used to design potential layouts.\n"+
+            "Click an object to add it to the floor plan. " +
+            "Drag the object with the LEFT mouse button. "+
+            "\nMouse over an object and RIGHT-CLICK to delete it." , \
+                         foreground="black", background=background, \
+                         font=(controller.font, 11, 'bold'), anchor="e")  
+        self.hints.grid(row=4, column=0, columnspan=3)
 
-#             canvas.update_idletasks
-#         rotateBTN = Button(self, text="Rotate", command=rotate)
-#         rotateBTN.grid(row=3, column=2)
-
-# # image = image.transpose(Image.ROTATE_90)
         return 
-
 
 class Dragger:
     def __init__(self):
@@ -497,6 +481,42 @@ class Dragger:
         y = widget.winfo_y() - widget._drag_start_y + event.y
         widget.place(x=x, y=y)
         
+    def make(self, event, filename):
+        self.floorplan.create_image(300,100,image=self.images[filename][1], tags=filename, anchor="n")
+        self.floorplan.tag_bind(filename, '<ButtonPress-1>', lambda event, arg=filename: self.drag_start(event, arg))
+        self.floorplan.tag_bind(filename, '<B1-Motion>', lambda event: self.drag(event))
+        self.floorplan.tag_bind(filename, '<ButtonRelease-1>', lambda event: self.drag_stop(event))
+        self.floorplan.tag_bind(filename, '<ButtonPress-2>', lambda event, arg=filename: self.delete_canvas_item(event, arg))
+        self.floorplan.tag_bind(filename, '<ButtonPress-3>', lambda event, arg=filename: self.delete_canvas_item(event, arg))
+ 
+    def delete_canvas_item(self, event, filename):
+        self.floorplan.delete(event.widget.find_withtag('current')[0])
+       
+    def drag_start(self, event, filename):
+        """Begining drag of an object"""
+        # # record the item and its location
+        self._drag_data["item"] = self.floorplan.find_closest(event.x, event.y)[0]
+        self._drag_data["x"] = event.x
+        self._drag_data["y"] = event.y
+
+    def drag_stop(self, event):
+        """End drag of an object"""
+        # reset the drag information
+        self._drag_data["item"] = None
+        self._drag_data["x"] = 0
+        self._drag_data["y"] = 0
+
+    def drag(self, event):
+        """Handle dragging of an object"""
+        # compute how much the mouse has moved
+       
+        delta_x = event.x - self._drag_data["x"]
+        delta_y = event.y - self._drag_data["y"]
+        # move the object the appropriate amount
+        self.floorplan.move(self._drag_data["item"], delta_x, delta_y)
+        # record the new position
+        self._drag_data["x"] = event.x
+        self._drag_data["y"] = event.y
 
 class OpenFileScreen(tk.Frame):
     def __init__(self, parent, controller):
